@@ -1,10 +1,6 @@
 <?php
 // conditions pour enclencher cette page : state = 1
 
-// todo : formulaire de saisie du nom juge et nom coureur
-// todo : mettre à jour le numéro du juge et coureur
-// sauver et attendre
-// waitForGo
 
 // pour info, si state=3, directement aller à juge3.php
 
@@ -19,26 +15,27 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function saveRace(event) {
+        function saveJudge(event) {
             event.preventDefault();
             let judgeName = $('#judgeName').val();
             let runnerName = $('#runnerName').val();
-            $.post('save_race.php', { raceName: raceName, judgeCount: judgeCount }, function(response) {
+            $.post('save_judge.php', { runnerName: runnerName, judgeName: judgeName }, function(response) {
                 $('#status').text(response);
                 const textRN = document.getElementById('runnerName');
                 const textJN = document.getElementById('judgeName');
                 textRN.disabled = true;
                 textJN.disabled = true;
-                waitForArbitre();
+                waitForGo();
             });
         }
 
-        function waitForArbitre() {
+        function waitForGo() {
             let interval = setInterval(function() {
                 $.get('check_state.php', function(response) {
                     if (response.trim() === '3') { // L'arbitre a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
+                        window.location.ref = "juge3.php";
                     } // if juges connectés
                 });
             }, 1000);
@@ -49,7 +46,7 @@
     <header>
         JUGE : Configuration
     </header>
-    <form onsubmit="saveJudge(event);">
+    <form onsubmit="saveJudge(event); return false;">
         <label for="judgeName">Nom du juge :</label>
         <input type="text" name="judgeName" id="judgeName" required>
         <br>
@@ -60,7 +57,7 @@
     </form>
     <div id="status">Définissez les paramètres...</div>
     <footer>
-        © 2025 - Biathlon Verification System
+        © 2025 - Biathlon Supervision System
     </footer>
 </body>
 </html>

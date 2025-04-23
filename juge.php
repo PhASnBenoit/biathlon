@@ -1,3 +1,9 @@
+<?php
+// si state = 2, on peut
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -14,7 +20,6 @@
                 url: 'check_state.php',
                 method: 'GET',
                 success: function(response) {
-                    alert(response);
                     if (response.trim() === '1') {
                         $('#status').text("Autorisation de l'arbitre");
                         clearInterval(interval);
@@ -36,7 +41,7 @@
     </header>
      <div id="status">En attente de l'arbitre</div>
      <footer>
-        © 2025 - Biathlon Verification System
+        © 2025 - Biathlon Supervision System
     </footer>
 </body>
 </html>

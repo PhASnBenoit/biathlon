@@ -29,11 +29,15 @@ class CBdd {
         return $result;
     } // saveRace
 
-// A CORRIGER !!!
-    public function saveJudge($runnerName, $judgeName) {
-        $sql = "UPDATE config SET nom_course = :raceName, max_juges = :judgeCount WHERE id_config = 1";
-        $result = $this->update($sql, ['raceName' => $raceName, 'judgeCount' => $judgeCount]);
-        return $result;
+    public function saveJudge($runnerName, $judgeName, $num) {
+        $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName WHERE num = :num";
+        $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num]);
+        if ($result === 0) {
+            $sql = "INSERT INTO race (num, runnerName, judgeName) VALUES (:num, :runnerName, :judgeName)";
+            $result = $this->insert($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num]);
+            return $result;  // c'est le lastInsertId
+        } // rowCount=0
+        return $result; // rowCount
     } // saveRace
 
     public function getState() {
@@ -47,6 +51,41 @@ class CBdd {
         $result = $this->update($sql, ['etat' => $etat]);
         return $result;
     } // setState
+
+    public function getNbJuges() {
+        $sql = "SELECT nb_juges FROM config LIMIT 1";
+        $result = $this->select($sql);
+        return $result;
+    } // getNbJuges
+
+    public function setNbJuges($nb) {
+        $sql = "UPDATE config SET nb_juges = :nb WHERE id_config = 1";
+        $result = $this->update($sql, ['nb' => $nb]);
+        return $result;
+    } // setNbJuges
+
+    public function lockTable($table, $mode) {
+        try {
+            $this->pdo->beginTransaction();
+            $this->pdo->exec("LOCK TABLES $table $mode");
+        } catch (PDOException $e) {
+            die("Erreur de connexion : " . $e->getMessage());
+        }
+
+    } // lockTable
+
+    public function unlockTable() {
+        try {
+            // Déverrouillage des tables
+            $this->pdo->exec("UNLOCK TABLES");
+            // Fin de la transaction
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            die("Erreur de connexion : " . $e->getMessage());
+        }
+    } // lockTable
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
     private function connect() {
         try {

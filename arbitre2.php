@@ -37,6 +37,7 @@
                         $('#status').text('Tous les juges sont connectés !');
                         const boutonGo = document.getElementById('bt-go');
                         boutonGo.style.display = 'inline'; // ou JQuery : $('#bt-sauver').prop('disabled', true);
+                        window.location.href = 'arbitre3.php';
                     } // if juges connectés
                 });
             }, 1000);
@@ -61,7 +62,7 @@
     </form>
     <div id="status">Définissez les paramètres...</div>
     <footer>
-        © 2025 - Biathlon Verification System
+        © 2025 - Biathlon Supervision System
     </footer>
 </body>
 </html>

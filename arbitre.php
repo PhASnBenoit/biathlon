@@ -22,7 +22,7 @@
     </main>
 
     <footer>
-        © 2025 - Biathlon Verification System
+        © 2025 - Biathlon Supervision System
     </footer>
 
 </body>
