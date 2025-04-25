@@ -1,5 +1,20 @@
 <?php
-// si state = 2, on peut
+session_start();
+require "cbdd.php";
+
+// Est-ce une reprise de connexion ?
+if (isset($_COOKIE['biathlon_token'])) {
+    // le juge s'est déjà connecté
+
+    // lire l'état dans la base
+    $state = $db = getState();
+
+    // donner la page correspondante
+
+
+} // si token
+
+
 
 ?>
 

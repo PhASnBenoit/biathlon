@@ -29,12 +29,12 @@ class CBdd {
         return $result;
     } // saveRace
 
-    public function saveJudge($runnerName, $judgeName, $num) {
-        $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName WHERE num = :num";
-        $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num]);
+    public function saveJudge($runnerName, $judgeName, $num, $token) {
+        $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName, token = :token WHERE num = :num";
+        $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
         if ($result === 0) {
-            $sql = "INSERT INTO race (num, runnerName, judgeName) VALUES (:num, :runnerName, :judgeName)";
-            $result = $this->insert($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num]);
+            $sql = "INSERT INTO race (num, runnerName, judgeName, token) VALUES (:num, :runnerName, :judgeName, :token)";
+            $result = $this->insert($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
             return $result;  // c'est le lastInsertId
         } // rowCount=0
         return $result; // rowCount
@@ -53,10 +53,16 @@ class CBdd {
     } // setState
 
     public function getNbJuges() {
-        $sql = "SELECT nb_juges FROM config LIMIT 1";
+        $sql = "SELECT nb_juges, max_juges FROM config LIMIT 1";
         $result = $this->select($sql);
         return $result;
     } // getNbJuges
+
+    public function viderTableRace() {
+        $sql = "TRUNCATE TABLE race";
+        $result = $this->pdo->exec($sql);
+        return $result;
+    } // viderTableRace
 
     public function setNbJuges($nb) {
         $sql = "UPDATE config SET nb_juges = :nb WHERE id_config = 1";

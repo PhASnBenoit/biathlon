@@ -1,9 +1,25 @@
 <?php
-// conditions pour enclencher cette page : state = 1
+require 'cbdd.php';
+
+// TODO tester si existence session ouverte
+if (isset($_COOKIE['client_token'])) {
+    // le juge s'est déjà connecté
+
+} // si token
 
 
-// pour info, si state=3, directement aller à juge3.php
-
+// vérifier qu'on accède que si state=1
+$stmt = $db->getState();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($row['state'] == '0')
+    header("location: juge.php");
+if ($row['state'] > '1')
+    header("location: juge3.php");
+// vérifier que nbJudge pas atteint le max.
+$stmt = $db->getNbJuges();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($row['nb_juges'] == $row['max_juges'])
+    header("location: public.php");
 ?>
 
 <!DOCTYPE html>
@@ -17,17 +33,23 @@
     <script>
         function saveJudge(event) {
             event.preventDefault();
+            $.get('check_state.php', function(response) {
+                    if (response.trim() === '0') {
+                       $('#status').text("L'arbitre a annulé la course !");
+                        window.location.ref = "juge.php";
+                    } // if juges connectés
+                });
             let judgeName = $('#judgeName').val();
             let runnerName = $('#runnerName').val();
             $.post('save_judge.php', { runnerName: runnerName, judgeName: judgeName }, function(response) {
-                $('#status').text(response);
+                $('#status').html(response);
                 const textRN = document.getElementById('runnerName');
                 const textJN = document.getElementById('judgeName');
                 textRN.disabled = true;
                 textJN.disabled = true;
                 waitForGo();
             });
-        }
+        } // saveJudge
 
         function waitForGo() {
             let interval = setInterval(function() {
