@@ -40,10 +40,24 @@ class CBdd {
         return $result; // rowCount
     } // saveRace
 
+    public function setTokenArbitre($token) {
+        $sql = "UPDATE config SET token = :token WHERE id_config = 1";
+        $result = $this->update($sql, ['token' => $token]);
+        return $result;
+    } // setTokenArbitre
+
+    public function getTokenArbitre() {
+        $sql = "SELECT token FROM config LIMIT 1";
+        $result = $this->select($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row['token'];
+    } // getState
+
     public function getState() {
         $sql = "SELECT state FROM activity LIMIT 1";
         $result = $this->select($sql);
-        return $result;
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row['state'];
     } // getState
 
     public function setState($etat) {

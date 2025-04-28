@@ -8,8 +8,7 @@
                  $params["path"], $params["domain"],
                  $params["secure"], $params["httponly"]
                 );
-}
+    } // if ini_get
     session_destroy();
     header("Location: arbitre.php");
-
 ?>

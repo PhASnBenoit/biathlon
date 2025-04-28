@@ -1,41 +1,84 @@
 <?php
-// script pour l'état 0 du système
 
-session_start();
-// si session déjà commencée
-if (isset($_SESSION['state'])) {
-    switch($_SESSION['state']) {
-        case 0:
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
-                require 'cbdd.php';
-                $code = $_POST['code'];
-                $exists = $db->isGoodCode($code);
-                if ($exists) {
-                    $_SESSION['id'] = $code;
-                    header("Location: arbitre1.php"); // vers paramétrage course
-                    exit();
-                } else {
-                    echo "Code invalide.";
-                    exit();
-                } // else
-            } // if $_SERVER
-            break;
-        case 1: // Attente connexion des juges
-            header("Location: arbitre1.php"); // vers attente des juges
-            break;
-        case 2: // Formulaire go
-            header("Location: arbitre2.php"); // formulaire go ou raz
-            break;
-        case 3: // suivi course et stop
-            header("Location: arbitre3.php");  // suivi de la course et FIN
-            break;
-    } // sw
-// Si première connexion
-} else { // première fois
-    $_SESSION['state'] = 0;  // état attente connexion et paramétrage course par l'arbitre
-} // else
+/* possibilités :
+ * L'arbitre ne s'est pas encore connecté, pas de cookie
+ * -> demande du code, si code bon, création du cookie
+ * L'arbitre s'est déjà connecté, cookie
+ * -> Examen des variables session et state de la cbdd et
+ *    aiguillage vers la bonne page.
+ */
+require 'cbdd.php';
 
+// seulement dans le cas ou on a entré le code
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
+    $code = $_POST['code'];
+    $exists = $db->isGoodCode($code);
+    if ($exists) {
+        // effacement des éventuels cookies
+        if (isset($_COOKIE)) {
+           foreach ($_COOKIE as $name => $value) {
+              setcookie($name, '', time() - 3600, '/'); // date négative
+           } // for
+        } // if
+        session_start();
+        $_SESSION['id'] = $code;
+        // init de la course
+        $_SESSION['state'] = 0; // première fois.
+        $db->setState(0);
+        $db->setNbJuges(0);
+        $db->viderTableRace();
+        // token session
+        $token = bin2hex(random_bytes(16));
+        setcookie('biathlon_arbitre_token', $token, time() + 1800, "/");
+        $db->setTokenArbitre($token);
+        $_SESSION['tokenArbitre'] = $token;
+        echo "<br>arbitre : Session créée, cookie créé, ";
+        echo '<br>arbitre : $_SESSION = ';
+        var_dump($_SESSION);
+        header("Location: arbitre1.php"); // vers paramétrage course
+        exit();
+    } else {
+        echo "<br>arbitre : Code invalide.";
+        exit();
+    } // else
+} // if $_SERVER
+
+if (isset($_COOKIE['biathlon_arbitre_token'])) {
+    $token = $_COOKIE['biathlon_arbitre_token']; // cookie local
+    // on prend celui de la cbdd
+    $tokenBdd = $db->getTokenArbitre();
+    // comparaison
+    echo "<br>arbitre(si cookie) : récupération du token";
+    if ($token === $tokenBdd) {
+        session_start();
+        $_SESSION['state'] = $db->getState();
+        echo "<br>arbitre(si cookie) : Bon token<br>";
+        echo '<br>arbitre(si cookie) : $_SESSION = ';
+        var_dump($_SESSION);
+        // si session déjà commencée
+        if (isset($_SESSION['state'])) {
+            switch($_SESSION['state']) {
+                case 0:
+                case 1: // Attente connexion des juges
+                    header("Location: arbitre1.php"); // vers attente des juges
+                    break;
+                case 2: // Formulaire go
+                    header("Location: arbitre2.php"); // formulaire go ou raz
+                    break;
+                case 3: // suivi course et stop
+                    header("Location: arbitre3.php");  // suivi de la course et FIN
+                    break;
+            } // sw
+        // Si première connexion
+        } // if isset
+        exit();
+    } else {
+        echo "<br>arbitre(si cookie) : Mauvais token<br>";
+       // header("Location: raz.php");
+    }// else pas bon token
+} // if cookie
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
