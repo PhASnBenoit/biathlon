@@ -1,9 +1,8 @@
 <?php
 require 'cbdd.php';
 
-    $stmt = $db->getState();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo $row ? $row['state'] : '0';
+    $state = $db->getState();
+    echo $state;
 
     /* states
      * 0 : L'arbitre seul peut se connecter

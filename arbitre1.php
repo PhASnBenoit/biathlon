@@ -29,13 +29,13 @@ if (isset($_SESSION['state'])) {
         // 0 et 1 : On reste sur la page
     }
 }
-// Si pas de state : continuer et afficher la page
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>ARBITRE : Configuration de la Course</title>
+    <title>BIATHLON CONFIGURATION ARBITRE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -44,7 +44,6 @@ if (isset($_SESSION['state'])) {
         function saveRace() {
             let raceName = $('#raceName').val();
             let judgeCount = $('#judgeCount').val();
-            alert('Dans saveRace');
             $.post('save_race.php', { raceName: raceName, judgeCount: judgeCount }, function(response) {
                 $('#status').text(response);
                 waitForJudges();
@@ -52,13 +51,11 @@ if (isset($_SESSION['state'])) {
         } // saveRace
 
         function waitForJudges() {
-            alert('Dans waitForJudges');
             // Ici on protège PHP avec isset pour éviter erreur JS si pas défini
             let raceName = <?php echo isset($_SESSION['raceName']) ? json_encode($_SESSION['raceName']) : '""'; ?>;
             let judgeCount = <?php echo isset($_SESSION['judgeCount']) ? json_encode($_SESSION['judgeCount']) : '""'; ?>;
             $('#raceName').val(raceName);
             $('#judgeCount').val(judgeCount);
-
             $('#bt-sauver').hide();
             $('#raceName').prop('disabled', true);
             $('#judgeCount').prop('disabled', true);
@@ -78,15 +75,12 @@ if (isset($_SESSION['state'])) {
         $(document).ready(function() {
             <?php
             if (isset($_SESSION['raceName'])) { // si paramétrage déjà fait
-            echo "alert('On attend directement les juges');";
-            echo "window.onload = waitForJudges();";
+                echo "window.onload = waitForJudges();";
             } else {
             ?>
                 $('#configCourse').on('submit', function(e) {
                     e.preventDefault();
-                    alert("Avant saveRace");
                     saveRace();
-                    alert("Après saveRace");
                 });
             <?php
             } // else
@@ -96,7 +90,7 @@ if (isset($_SESSION['state'])) {
 </head>
 <body>
     <header>
-        ARBITRE : Configuration de la Course
+        BIATHLON CONFIGURATION ARBITRE
     </header>
 
     <form id="configCourse">

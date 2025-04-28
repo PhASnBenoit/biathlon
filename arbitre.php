@@ -32,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
         setcookie('biathlon_arbitre_token', $token, time() + 1800, "/");
         $db->setTokenArbitre($token);
         $_SESSION['tokenArbitre'] = $token;
-        echo "<br>arbitre : Session créée, cookie créé, ";
-        echo '<br>arbitre : $_SESSION = ';
-        var_dump($_SESSION);
+//        echo "<br>arbitre : Session créée, cookie créé, ";
+//        echo '<br>arbitre : $_SESSION = ';
+//        var_dump($_SESSION);
         header("Location: arbitre1.php"); // vers paramétrage course
         exit();
     } else {
@@ -48,13 +48,13 @@ if (isset($_COOKIE['biathlon_arbitre_token'])) {
     // on prend celui de la cbdd
     $tokenBdd = $db->getTokenArbitre();
     // comparaison
-    echo "<br>arbitre(si cookie) : récupération du token";
+//    echo "<br>arbitre(si cookie) : récupération du token";
     if ($token === $tokenBdd) {
         session_start();
         $_SESSION['state'] = $db->getState();
-        echo "<br>arbitre(si cookie) : Bon token<br>";
-        echo '<br>arbitre(si cookie) : $_SESSION = ';
-        var_dump($_SESSION);
+//        echo "<br>arbitre(si cookie) : Bon token<br>";
+//        echo '<br>arbitre(si cookie) : $_SESSION = ';
+//        var_dump($_SESSION);
         // si session déjà commencée
         if (isset($_SESSION['state'])) {
             switch($_SESSION['state']) {
@@ -73,7 +73,7 @@ if (isset($_COOKIE['biathlon_arbitre_token'])) {
         } // if isset
         exit();
     } else {
-        echo "<br>arbitre(si cookie) : Mauvais token<br>";
+//        echo "<br>arbitre(si cookie) : Mauvais token<br>";
        // header("Location: raz.php");
     }// else pas bon token
 } // if cookie
@@ -84,13 +84,13 @@ if (isset($_COOKIE['biathlon_arbitre_token'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification du Code</title>
+    <title>BIATHLON CODE ARBITRE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        BIATHLON ESPACE ARBITRE
+        BIATHLON CODE ARBITRE
     </header>
 
     <main>

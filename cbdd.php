@@ -84,6 +84,11 @@ class CBdd {
         return $result;
     } // setNbJuges
 
+    public function getParamsCourse() {
+        $stmt = $this->select("SELECT * from config LIMIT 1");
+        return $stmt;
+    }
+
     public function lockTable($table, $mode) {
         try {
             $this->pdo->beginTransaction();

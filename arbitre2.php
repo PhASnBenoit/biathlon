@@ -1,7 +1,35 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['id']))       // tentative hacking
-       header("Location: logout.php");
+// arbitre2.php
+session_start(); // Toujours ouvrir la session en début de script
+require 'cbdd.php';
+
+// Sécurité : vérifier l'authentification par cookie
+if (!isset($_COOKIE['biathlon_arbitre_token'])) {
+    header("Location: raz.php");
+    exit();
+}
+
+$token = $_COOKIE['biathlon_arbitre_token'];
+$tokenBdd = $db->getTokenArbitre();
+
+if ($token !== $tokenBdd) {
+    header("Location: raz.php");
+    exit();
+} // if token
+
+// Si la session existe, décider où aller
+if (isset($_SESSION['state'])) {
+    switch ($_SESSION['state']) {
+        case 0:
+        case 1:
+            header("Location: arbitre.php");
+            exit();
+        case 3:
+            header("Location: arbitre3.php");
+            exit();
+        // 2 : On reste sur la page
+    } // sw
+} // isset
 ?>
 
 <!DOCTYPE html>
@@ -9,58 +37,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuration de la Course par l'arbitre</title>
+    <title>BIATHLON LANCEMENT COURSE ARBITRE</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function saveRace(event) {
-            event.preventDefault();
-            let raceName = $('#raceName').val();
-            let judgeCount = $('#judgeCount').val();
-            $.post('save_race.php', { raceName: raceName, judgeCount: judgeCount }, function(response) {
-                $('#status').text(response);
-                const boutonS = document.getElementById('bt-sauver');
-                const textRN = document.getElementById('raceName');
-                const numberJC = document.getElementById('judgeCount');
-                boutonS.style.display = 'none'; // ou JQuery : $('#bt-sauver').prop('disabled', true);
-                numberJC.disabled = true;
-                textRN.disabled = true;
-                waitForJudges();
-            });
-        }
-
-        function waitForJudges() {
-            let interval = setInterval(function() {
-                $.get('check_state.php', function(response) {
-                    if (response.trim() === '2') { // tous les juges sont connectés
-                        clearInterval(interval);
-                        $('#status').text('Tous les juges sont connectés !');
-                        const boutonGo = document.getElementById('bt-go');
-                        boutonGo.style.display = 'inline'; // ou JQuery : $('#bt-sauver').prop('disabled', true);
-                        window.location.href = 'arbitre3.php';
-                    } // if juges connectés
-                });
-            }, 1000);
-        }
-    </script>
 </head>
 <body>
     <header>
-        ARBITRE : Configuration de la Course
+        BIATHLON LANCEMENT COURSE ARBITRE
     </header>
-    <form onsubmit="saveRace(event);">
-        <label for="raceName">Nom course :</label>
-        <input type="text" name="raceName" id="raceName" required>
-        <br>
-        <label for="judgeCount">Nombre de juge :</label>
-        <input type="number" name="judgeCount" id="judgeCount" min="1" max="8" required>
-        <br>
-        <button type="submit" name="bt-sauver" id="bt-sauver" value="sauver">Sauver et attendre les juges</button>
-        <a href="raz.php">RAZ</a>
-        <br>
-        <button type="submit" name="bt-go" id="bt-go" value="go" hidden>GO</button>
+    <?php
+        // afficher les paramètres de la course
+        $stmt = $db->getParamsCourse();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    ?>
+        <div id="params">
+            Nom de la course : <?php echo $row['nom_course']; ?><br>
+            Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
+        </div>
+    <form action="arbitre3.php" method="post">
+        <button type="submit" name="bt-go" id="bt-go" value="bt-go" >GO</button>
+        <a href="raz.php"> RAZ</a>
+
     </form>
-    <div id="status">Définissez les paramètres...</div>
+    <div id="status">Cliquez pour démarrer la course !</div>
     <footer>
         © 2025 - Biathlon Supervision System
     </footer>
