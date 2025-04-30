@@ -40,6 +40,12 @@ class CBdd {
         return $result; // rowCount
     } // saveRace
 
+    public function getParamsJuges() {
+        $sql = "SELECT * FROM race";
+        $result = $this->select($sql);
+        return $result;
+    } // getJuges
+
     public function setTokenArbitre($token) {
         $sql = "UPDATE config SET token = :token WHERE id_config = 1";
         $result = $this->update($sql, ['token' => $token]);

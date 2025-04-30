@@ -2,6 +2,4 @@
 // arbitre3.php
 
 
-
-
 ?>

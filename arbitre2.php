@@ -5,7 +5,7 @@ require 'cbdd.php';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    header("Location: raz.php");
+    //header("Location: raz.php");
     exit();
 }
 
@@ -13,7 +13,7 @@ $token = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
 
 if ($token !== $tokenBdd) {
-    header("Location: raz.php");
+    //header("Location: raz.php");
     exit();
 } // if token
 
@@ -37,6 +37,9 @@ if (isset($_SESSION['state'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>BIATHLON LANCEMENT COURSE ARBITRE</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -53,6 +56,16 @@ if (isset($_SESSION['state'])) {
         <div id="params">
             Nom de la course : <?php echo $row['nom_course']; ?><br>
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
+            -----<br>
+    <?php
+        $stmt = $db->getParamsJuges();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
+            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
+            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
+            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
+        } // wh
+    ?>
         </div>
     <form action="arbitre3.php" method="post">
         <button type="submit" name="bt-go" id="bt-go" value="bt-go" >GO</button>

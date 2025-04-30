@@ -17,9 +17,9 @@ header {
     font-weight: bold;
     text-transform: uppercase;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    position: sticky;
     top: 0;
     width: 100%;
+    position: sticky;
     z-index: 1000;
 }
 
@@ -73,12 +73,15 @@ p {
 /* Formulaire */
 .form-container, form {
     background: #f9f9f9;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     margin: auto;
     text-align: center;
+    position: relative;
+    z-index: 1002;
+
 }
 
 form label {
@@ -111,7 +114,7 @@ form button:hover {
     background: #0066cc;
 }
 
-/* params */
+/* params
 #params {
     margin-top: 20px;
     font-size: 18px;
@@ -120,8 +123,23 @@ form button:hover {
     text-align: center;
     display: flex;
     justify-content: center;
+    margin-bottom: 200px;
     align-items: center;
-    height: 50px;
+    position: relative;
+    z-index: 1001;
+
+}*/
+#params {
+    margin: 20px auto 30px auto; /* espacement dessus et dessous */
+    font-size: 18px;
+    font-weight: bold;
+    color: #004c99;
+    text-align: center;
+    max-width: 600px;
+    padding: 10px;
+    background-color: #e6f2ff; /* optionnel pour la lisibilité */
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Statut */

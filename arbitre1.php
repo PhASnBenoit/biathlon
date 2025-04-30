@@ -5,17 +5,17 @@ session_start(); // Toujours ouvrir la session en début de script
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    header("Location: raz.php");
+    //header("Location: raz.php");   // DANGEREUX
     exit();
-}
+} // if cookie
 
 $token = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
 
 if ($token !== $tokenBdd) {
-    header("Location: raz.php");
+    //header("Location: raz.php");
     exit();
-}
+} // if token
 
 // Si la session existe, décider où aller
 if (isset($_SESSION['state'])) {
@@ -27,15 +27,18 @@ if (isset($_SESSION['state'])) {
             header("Location: arbitre3.php");
             exit();
         // 0 et 1 : On reste sur la page
-    }
-}
+    } // sw
+} // if session
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
     <title>BIATHLON CONFIGURATION ARBITRE</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -1,4 +1,4 @@
-<?php
+ <?php
 require 'cbdd.php';
 
     $state = $db->getState();
