@@ -61,6 +61,24 @@ p {
     line-height: 1.6;
 }
 
+table {
+    border-collapse: collapse;
+    width: 80%;             /* ou 100% si tu préfères pleine largeur */
+    margin: 0 auto;         /* centrage horizontal */
+}
+th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+}
+.sub-value {
+    font-size: 0.8em;
+    color: #555;
+}
+.bold {
+    font-weight: bold;
+}
+
 /* Cartes d’événements */
 .event {
     background: #f1f1f1;
@@ -114,21 +132,6 @@ form button:hover {
     background: #0066cc;
 }
 
-/* params
-#params {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #004c99;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 200px;
-    align-items: center;
-    position: relative;
-    z-index: 1001;
-
-}*/
 #params {
     margin: 20px auto 30px auto; /* espacement dessus et dessous */
     font-size: 18px;

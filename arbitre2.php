@@ -50,7 +50,7 @@ if (isset($_SESSION['state'])) {
     </header>
     <?php
         // afficher les paramètres de la course
-        $stmt = $db->getParamsCourse();
+        $stmt = $db->getRace();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
         <div id="params">
@@ -61,10 +61,7 @@ if (isset($_SESSION['state'])) {
         $stmt = $db->getParamsJuges();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-        } // wh
+            } // wh
     ?>
         </div>
     <form action="arbitre3.php" method="post">

@@ -40,7 +40,7 @@ class CBdd {
         return $result; // rowCount
     } // saveRace
 
-    public function getParamsJuges() {
+    public function getRace() {
         $sql = "SELECT * FROM race";
         $result = $this->select($sql);
         return $result;
