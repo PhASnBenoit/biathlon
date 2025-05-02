@@ -18,7 +18,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     echo "<td>{$row['num']}</td>";
     echo "<td>{$row['runnerName']}</td>";
     $j=0;
-    for ($i = 0; $i <= 9; $i++) {
+    for ($i = 1; $i <= 9; $i++) {
         $val = format_duree($row["t$i"]);
         $note = null;
 
@@ -29,16 +29,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $seqTirs = "seqTirs{$j}";
             $seq = isset($row[$seqTirs]) ? $row[$seqTirs] : null;
         }
-        $is_last = ($i === 9);
-        echo "<td" . ($is_last ? " class='bold'" : "") . ">";
-
-        echo htmlspecialchars($val);
+        echo "<td>".htmlspecialchars($val);
         if (isset($seq)) {
             echo "<br><span class='sub-value'>" . htmlspecialchars($seq) . "</span>";
         }
-
         echo "</td>";
-    }
+    } // for
+        echo "<td  class='bold'>".htmlspecialchars(format_duree($row['totalTime']))."</td>";
 
     echo "</tr>";
 }

@@ -74,6 +74,7 @@ th, td {
 .sub-value {
     font-size: 0.8em;
     color: #555;
+    font-weight: bold;
 }
 .bold {
     font-weight: bold;
