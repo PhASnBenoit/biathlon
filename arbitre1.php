@@ -1,11 +1,10 @@
 <?php
 // arbitre1.php
-require 'cbdd.php';
 session_start(); // Toujours ouvrir la session en début de script
+require 'cbdd.php';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    //header("Location: raz.php");   // DANGEREUX
     exit();
 } // if cookie
 
@@ -13,7 +12,6 @@ $token = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
 
 if ($token !== $tokenBdd) {
-    //header("Location: raz.php");
     exit();
 } // if token
 
@@ -45,8 +43,8 @@ if (isset($_SESSION['state'])) {
 
     <script>
         function saveRace() {
-            let raceName = $('#raceName').val();
-            let judgeCount = $('#judgeCount').val();
+            raceName = $('#raceName').val();
+            judgeCount = $('#judgeCount').val();
             $.post('save_race.php', { raceName: raceName, judgeCount: judgeCount }, function(response) {
                 $('#status').text(response);
                 waitForJudges();
@@ -55,10 +53,12 @@ if (isset($_SESSION['state'])) {
 
         function waitForJudges() {
             // Ici on protège PHP avec isset pour éviter erreur JS si pas défini
-            let raceName = <?php echo isset($_SESSION['raceName']) ? json_encode($_SESSION['raceName']) : '""'; ?>;
-            let judgeCount = <?php echo isset($_SESSION['judgeCount']) ? json_encode($_SESSION['judgeCount']) : '""'; ?>;
-            $('#raceName').val(raceName);
-            $('#judgeCount').val(judgeCount);
+//            let wraceName = <?php echo isset($_SESSION['raceName']) ? $_SESSION['raceName'] : '"update"'; ?>;
+//            let wjudgeCount = <?php echo isset($_SESSION['judgeCount']) ? $_SESSION['judgeCount'] : '"99"'; ?>;
+            let wraceName = raceName;
+            let wjudgeCount = judgeCount;
+            $('#raceName').val(wraceName);
+            $('#judgeCount').val(wjudgeCount);
             $('#bt-sauver').hide();
             $('#raceName').prop('disabled', true);
             $('#judgeCount').prop('disabled', true);

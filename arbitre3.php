@@ -17,6 +17,11 @@ if ($token !== $tokenBdd) {
     exit();
 } // if token
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
+    $db->setState(3);
+    $_SESSION['state'] = 3;
+} // if post go
+
 // Si la session existe, décider où aller
 if (isset($_SESSION['state'])) {
     switch ($_SESSION['state']) {
@@ -45,13 +50,13 @@ if (isset($_SESSION['state'])) {
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>BIATHLON LANCEMENT COURSE ARBITRE</title>
+    <title>BIATHLON SUIVI COURSE ARBITRE</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
-        BIATHLON LANCEMENT COURSE ARBITRE
+        BIATHLON SUIVI COURSE ARBITRE
     </header>
     <?php
         // afficher les paramètres de la course
@@ -70,11 +75,12 @@ if (isset($_SESSION['state'])) {
     ?>
         </div>
     <form action="arbitre3.php" method="post">
-        <button type="submit" name="bt-go" id="bt-go" value="bt-go" >GO</button>
+        <button type="submit" name="bt-fin" id="bt-fin" value="bt-fin" >FIN</button>
         <a href="raz.php"> RAZ</a>
-
     </form>
+
     <div id="status">Cliquez pour démarrer la course !</div>
+
     <footer>
         © 2025 - Biathlon Supervision System
     </footer>

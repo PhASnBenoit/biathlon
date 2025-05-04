@@ -50,7 +50,7 @@ if (isset($_SESSION['state'])) {
     </header>
     <?php
         // afficher les paramètres de la course
-        $stmt = $db->getRace();
+        $stmt = $db->getParamsCourse();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
         <div id="params">
@@ -58,7 +58,7 @@ if (isset($_SESSION['state'])) {
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
             -----<br>
     <?php
-        $stmt = $db->getParamsJuges();
+        $stmt = $db->getRace();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
             } // wh

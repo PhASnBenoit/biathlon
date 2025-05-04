@@ -21,7 +21,6 @@ require 'cbdd.php';
     <header>
         BIATHLON SUIVI DE COURSE
     </header>
-    <?php echo "Temps au format min:sec:cent."; ?>
   <table>
     <thead>
       <tr>
@@ -47,7 +46,13 @@ require 'cbdd.php';
     <tbody id="table-body">
       <!-- Contenu chargé dynamiquement par AJAX -->
     </tbody>
-  </table>
+    </table>
+      <?php
+        echo "Temps au format min:sec:cent.<br>";
+        echo "2T : 2 tours de stade.<br>";
+        echo "ST : Séquence de 5 tirs.<br>";
+        echo "TP : Tours de pénalité.<br>";
+      ?>
 
   <script>
     async function loadData() {

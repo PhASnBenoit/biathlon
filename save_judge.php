@@ -1,15 +1,11 @@
 <?php
 require 'cbdd.php';
 
-// TODO contrôler que l'arbitre n'a pas annulé la course
-// ou ne recommence pas ce script plusieurs fois
-// peut être le faire dans juge2.php
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['runnerName'])) {
     $runnerName = $_POST['runnerName'];
     $judgeName = $_POST['judgeName'];
     // bloquer la table config
-    $db->lockTable("config WRITE, race", "WRITE");  // BLOCAGE DES TABLES
+    $db->lockTable("activity WRITE, config WRITE, race ", "WRITE");  // BLOCAGE DES TABLES
         // lire la valeur de nb_juges
         $req = $db->getNbJuges();
         $row = $req->fetch(PDO::FETCH_ASSOC);
@@ -19,19 +15,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['runnerName'])) {
             $noJudge++;
             // créer le cookie
             $token = bin2hex(random_bytes(16));
-            setcookie('biathlon_token', $token, time() + (900 * 30), "/"); // 2h
+            setcookie('biathlon_token_juge', $token, time() + (900 * 30), "/"); // 2h
+            session_start();
             $_SESSION['no'] = $noJudge;
             $_SESSION['token'] = $token;
             $_SESSION['runnerName'] = $runnerName;
             $_SESSION['judgeName'] = $judgeName;
-            $db->setNbJuges($noJudge);// créer l'enr dans race avec nb_juges+1
+            $_SESSION['maxJudges'] = $maxJudges;
+            $db->setNbJuges($noJudge);// augmente nb_juges+1
+            if ($noJudge == $maxJudges) {
+                $db->setState(2); // tous les juges sont présents.
+                $_SESSION['state'] = 2;
+            } // if
             // créer la ligne dans la table race
-            $res = $db->saveJudge($runnerName, $judgeName, $noJudge, $token);
+            $res = $db->addJudge($runnerName, $judgeName, $noJudge, $token);
             // ouvrir session et sauver nojuge et les noms
-            session_start();
             echo "paramètres sauvegardés.<br>Vous êtes le juge $noJudge<br>En attente du départ de la course...";
-        } else // if pas plus de juge
+        } else {// if pas plus de juge
             echo "Le nombre de juge est atteint ! impossible de continuer !";
+            $db->unlockTable();     //               DEBLOCAGE DES TABLES
+            exit();
+        } // else max juges
     // débloquer la table
     $db->unlockTable();     //               DEBLOCAGE DES TABLES
 } // if

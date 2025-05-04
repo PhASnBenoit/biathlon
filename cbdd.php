@@ -16,20 +16,20 @@ class CBdd {
         $this->connect();
     }
 
-    public function isGoodCode($code) {
+    public function isGoodCode($code) {  // ARBITRE
         $sql = "SELECT COUNT(*) FROM config WHERE code = :code";
         $result = $this->select($sql, ['code' => $code]);
         $exists = $result->fetchColumn();
         return $exists;
     } // isGoodCode
 
-    public function saveRace($raceName, $judgeCount) {
+    public function saveParamsRace($raceName, $judgeCount) {  // ARBITRE
         $sql = "UPDATE config SET nom_course = :raceName, max_juges = :judgeCount WHERE id_config = 1";
         $result = $this->update($sql, ['raceName' => $raceName, 'judgeCount' => $judgeCount]);
         return $result;
     } // saveRace
 
-    public function saveJudge($runnerName, $judgeName, $num, $token) {
+    public function addJudge($runnerName, $judgeName, $num, $token) {  // JUGE
         $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName, token = :token WHERE num = :num";
         $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
         if ($result === 0) {
@@ -40,23 +40,33 @@ class CBdd {
         return $result; // rowCount
     } // saveRace
 
-    public function getRace() {
+    public function getRace() {  // PUBLIC
         $sql = "SELECT * FROM race";
         $result = $this->select($sql);
         return $result;
     } // getJuges
 
-    public function setTokenArbitre($token) {
+    public function setTokenArbitre($token) {  // ARBITRE
         $sql = "UPDATE config SET token = :token WHERE id_config = 1";
         $result = $this->update($sql, ['token' => $token]);
         return $result;
     } // setTokenArbitre
 
-    public function getTokenArbitre() {
+    public function getTokenArbitre() {  // ARBITRE
         $sql = "SELECT token FROM config LIMIT 1";
         $result = $this->select($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row['token'];
+    } // getState
+
+    public function getTokenJuge() {  // JUGE
+        $sql = "SELECT token, num FROM race LIMIT 1";
+        $result = $this->select($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row)
+            return ['token' => $row['token'], 'num' => $row['num']];
+        else
+            return ['token' => "", 'num' => 0];
     } // getState
 
     public function getState() {
@@ -92,6 +102,12 @@ class CBdd {
 
     public function getParamsCourse() {
         $stmt = $this->select("SELECT * from config LIMIT 1");
+        return $stmt;
+    }
+
+    public function getParamsJuge($num) {  // JUGE
+        $sql = "SELECT * from race WHERE num = :num";
+        $stmt = $this->select($sql, ['num' => $num]);
         return $stmt;
     }
 
