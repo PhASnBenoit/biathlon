@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 01, 2025 at 02:01 PM
+-- Generation Time: May 14, 2025 at 06:10 AM
 -- Server version: 10.11.9-MariaDB
 -- PHP Version: 7.4.33
 
@@ -37,7 +37,7 @@ CREATE TABLE `activity` (
 --
 
 INSERT INTO `activity` (`id_activity`, `state`) VALUES
-(1, 2);
+(1, 0);
 
 -- --------------------------------------------------------
 
@@ -59,7 +59,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`id_config`, `code`, `token`, `nom_course`, `nb_juges`, `max_juges`) VALUES
-(1, 111111, '875260c6a686d747a80d13b28b6a4069', 'ERA', 2, 1);
+(1, 111111, '0', 'Course 1', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -73,29 +73,22 @@ CREATE TABLE `race` (
   `runnerName` varchar(50) NOT NULL,
   `judgeName` varchar(50) NOT NULL,
   `token` varchar(32) NOT NULL,
-  `t0` int(11) DEFAULT NULL,
-  `t1` int(11) DEFAULT NULL,
-  `t2` int(11) DEFAULT NULL,
-  `t3` int(11) DEFAULT NULL,
-  `t4` int(11) DEFAULT NULL,
-  `t5` int(11) DEFAULT NULL,
-  `t6` int(11) DEFAULT NULL,
-  `t7` int(11) DEFAULT NULL,
-  `t8` int(11) DEFAULT NULL,
-  `t9` int(11) DEFAULT NULL,
-  `totalTime` int(11) DEFAULT NULL,
+  `judgeState` int(11) NOT NULL,
+  `t0` double DEFAULT NULL,
+  `t1` double DEFAULT NULL,
+  `t2` double DEFAULT NULL,
+  `t3` double DEFAULT NULL,
+  `t4` double DEFAULT NULL,
+  `t5` double DEFAULT NULL,
+  `t6` double DEFAULT NULL,
+  `t7` double DEFAULT NULL,
+  `t8` double DEFAULT NULL,
+  `t9` double DEFAULT NULL,
+  `totalTime` double DEFAULT 0,
   `seqTirs1` varchar(5) DEFAULT '0/0',
   `seqTirs2` varchar(5) DEFAULT '0/0',
   `seqTirs3` varchar(5) DEFAULT '0/0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `race`
---
-
-INSERT INTO `race` (`id_race`, `num`, `runnerName`, `judgeName`, `token`, `t0`, `t1`, `t2`, `t3`, `t4`, `t5`, `t6`, `t7`, `t8`, `t9`, `totalTime`, `seqTirs1`, `seqTirs2`, `seqTirs3`) VALUES
-(1, 1, 'toutou', 'tito', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 2, 'cawa', 'guillaume', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -139,7 +132,7 @@ ALTER TABLE `config`
 -- AUTO_INCREMENT for table `race`
 --
 ALTER TABLE `race`
-  MODIFY `id_race` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_race` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

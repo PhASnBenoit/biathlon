@@ -5,15 +5,15 @@ require 'cbdd.php';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    //header("Location: raz.php");
+    header("Location: arbitre.php");
     exit();
-}
+} // if cookie
 
-$token = $_COOKIE['biathlon_arbitre_token'];
+$cookieToken = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
 
-if ($token !== $tokenBdd) {
-    //header("Location: raz.php");
+if ($cookieToken !== $tokenBdd) {
+    header("Location: arbitre.php");
     exit();
 } // if token
 
@@ -30,6 +30,13 @@ if (isset($_SESSION['state'])) {
         // 2 : On reste sur la page
     } // sw
 } // isset
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
+    $db->setState(3);
+    $db->set_t0();
+    $_SESSION['state'] = 3;
+    header("Location: arbitre3.php");
+} // if post go
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +71,7 @@ if (isset($_SESSION['state'])) {
             } // wh
     ?>
         </div>
-    <form action="arbitre3.php" method="post">
+    <form action="arbitre2.php" method="post">
         <button type="submit" name="bt-go" id="bt-go" value="bt-go" >GO</button>
         <a href="raz.php"> RAZ</a>
 

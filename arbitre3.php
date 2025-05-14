@@ -5,7 +5,7 @@ require 'cbdd.php';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    //header("Location: raz.php");
+  echo "Cookie absent !";
     exit();
 }
 
@@ -14,12 +14,17 @@ $tokenBdd = $db->getTokenArbitre();
 
 if ($token !== $tokenBdd) {
     //header("Location: raz.php");
+    echo "Session terminée !";
     exit();
 } // if token
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
-    $db->setState(3);
-    $_SESSION['state'] = 3;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-fin'])) {
+    $db->setState(0);
+    $_SESSION['state'] = 0;
+    // sauver les données au format CSV
+    // réinitialiser les tables
+    header("Location: raz.php");
+    exit();
 } // if post go
 
 // Si la session existe, décider où aller
@@ -68,18 +73,67 @@ if (isset($_SESSION['state'])) {
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
             -----<br>
     <?php
-        $stmt = $db->getParamsJuges();
+        $stmt = $db->getRace();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
             } // wh
     ?>
         </div>
     <form action="arbitre3.php" method="post">
-        <button type="submit" name="bt-fin" id="bt-fin" value="bt-fin" >FIN</button>
+        <button onclick="return confirm('Es-tu sûr de vouloir terminer la course ?');" type="submit" name="bt-fin" id="bt-fin" value="bt-fin" >FIN</button>
         <a href="raz.php"> RAZ</a>
     </form>
 
-    <div id="status">Cliquez pour démarrer la course !</div>
+    <div id="status">Course en cours !</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Num</th>
+        <th>Coureur</th>
+        <?php
+          //for ($i = 1; $i <= 9; $i++) {
+          //    echo "<th>t$i</th>";
+          //}
+          echo "<th>2T1</th>";
+          echo "<th>ST1</th>";
+          echo "<th>TP1</th>";
+          echo "<th>2T2</th>";
+          echo "<th>ST2</th>";
+          echo "<th>TP2</th>";
+          echo "<th>2T3</th>";
+          echo "<th>ST3</th>";
+          echo "<th>TP3</th>";
+          echo "<th>Total</th>";
+        ?>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <!-- Contenu chargé dynamiquement par AJAX -->
+    </tbody>
+    </table>
+      <?php
+        echo "Temps au format min:sec:cent. ";
+        echo "2T : 2 tours de stade. ";
+        echo "ST : Séquence de 5 tirs. ";
+        echo "TP : Tours de pénalité.<br>";
+
+        //if ($_POST['bt-go']) {
+      ?>
+
+  <script>
+    async function loadData() {
+      const response = await fetch('refreshPublic.inc.php');
+      const html = await response.text();
+      document.getElementById('table-body').innerHTML = html;
+    } // async
+    loadData(); // Chargement initial
+    setInterval(loadData, 3000); // Rafraîchissement toutes les 5 secondes
+  </script>
+
+  <?php
+        //} // fin go
+  ?>
 
     <footer>
         © 2025 - Biathlon Supervision System

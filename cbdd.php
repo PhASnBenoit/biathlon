@@ -23,28 +23,41 @@ class CBdd {
         return $exists;
     } // isGoodCode
 
+    public function set_t0() {  // ARBITRE
+        $t0 = hrtime(true);
+        $sql = "UPDATE race SET t0 = :t0";
+        $result = $this->update($sql, ['t0' => $t0]);
+        return $result;
+    } // set_t0
+
+    public function set_judgeState($no, $etat) {  // JUGE
+        $sql = "UPDATE race SET judgeState = :etat WHERE num=:no";
+        $result = $this->update($sql, ['etat' => $etat, 'no' => $no]);
+        return $result;
+    } // set_judgeState
+
     public function saveParamsRace($raceName, $judgeCount) {  // ARBITRE
         $sql = "UPDATE config SET nom_course = :raceName, max_juges = :judgeCount WHERE id_config = 1";
         $result = $this->update($sql, ['raceName' => $raceName, 'judgeCount' => $judgeCount]);
         return $result;
-    } // saveRace
+    } // saveParamsRace
 
     public function addJudge($runnerName, $judgeName, $num, $token) {  // JUGE
         $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName, token = :token WHERE num = :num";
         $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
         if ($result === 0) {
-            $sql = "INSERT INTO race (num, runnerName, judgeName, token) VALUES (:num, :runnerName, :judgeName, :token)";
+            $sql = "INSERT INTO race (num, judgeState, runnerName, judgeName, token) VALUES (:num, 1, :runnerName, :judgeName, :token)";
             $result = $this->insert($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
             return $result;  // c'est le lastInsertId
         } // rowCount=0
         return $result; // rowCount
-    } // saveRace
+    } // addJudge
 
     public function getRace() {  // PUBLIC
         $sql = "SELECT * FROM race";
         $result = $this->select($sql);
         return $result;
-    } // getJuges
+    } // getRace
 
     public function setTokenArbitre($token) {  // ARBITRE
         $sql = "UPDATE config SET token = :token WHERE id_config = 1";
@@ -57,17 +70,17 @@ class CBdd {
         $result = $this->select($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row['token'];
-    } // getState
+    } // getTokenArbitre
 
-    public function getTokenJuge() {  // JUGE
-        $sql = "SELECT token, num FROM race LIMIT 1";
-        $result = $this->select($sql);
+    public function getTokenJuge($token) {  // JUGE
+        $sql = "SELECT token, num FROM race WHERE token = :token LIMIT 1";
+        $result = $this->select($sql, ['token' => $token]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row)
             return ['token' => $row['token'], 'num' => $row['num']];
         else
             return ['token' => "", 'num' => 0];
-    } // getState
+    } // getTokenJuge
 
     public function getState() {
         $sql = "SELECT state FROM activity LIMIT 1";
@@ -102,6 +115,7 @@ class CBdd {
 
     public function getParamsCourse() {
         $stmt = $this->select("SELECT * from config LIMIT 1");
+
         return $stmt;
     }
 

@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
 
         // Création et stockage du token
         $token = bin2hex(random_bytes(16));
-        setcookie('biathlon_arbitre_token', $token, time() + 1800, "/");
+        setcookie('biathlon_arbitre_token', $token, time() + 3600, "/");
         $db->setTokenArbitre($token);
         $_SESSION['tokenArbitre'] = $token;
 

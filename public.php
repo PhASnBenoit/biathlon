@@ -48,9 +48,9 @@ require 'cbdd.php';
     </tbody>
     </table>
       <?php
-        echo "Temps au format min:sec:cent.<br>";
-        echo "2T : 2 tours de stade.<br>";
-        echo "ST : Séquence de 5 tirs.<br>";
+        echo "Temps au format min:sec:cent. ";
+        echo "2T : 2 tours de stade. ";
+        echo "ST : Séquence de 5 tirs. ";
         echo "TP : Tours de pénalité.<br>";
       ?>
 
@@ -61,7 +61,7 @@ require 'cbdd.php';
       document.getElementById('table-body').innerHTML = html;
     } // async
     loadData(); // Chargement initial
-    setInterval(loadData, 5000); // Rafraîchissement toutes les 5 secondes
+    setInterval(loadData, 2000); // Rafraîchissement toutes les 5 secondes
   </script>
 </body>
 </html>

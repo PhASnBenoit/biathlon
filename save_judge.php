@@ -12,13 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['runnerName'])) {
         $noJudge = $row['nb_juges'];
         $maxJudges = $row['max_juges'];
         if ($noJudge < $maxJudges) { // pas créer plus de juges que le max défini
+            // Suppression des cookies existants
+            foreach ($_COOKIE as $name => $value) {
+                setcookie($name, '', time() - 3600, '/');
+            }
             $noJudge++;
             // créer le cookie
             $token = bin2hex(random_bytes(16));
-            setcookie('biathlon_token_juge', $token, time() + (900 * 30), "/"); // 2h
+            setcookie('biathlon_juge_token', $token, time() + 1800, "/"); //
             session_start();
+            $_SESSION = array();
+            $_SESSION['state'] = $db->getState();
             $_SESSION['no'] = $noJudge;
             $_SESSION['token'] = $token;
+            $_SESSION['judgeState'] = 1;
             $_SESSION['runnerName'] = $runnerName;
             $_SESSION['judgeName'] = $judgeName;
             $_SESSION['maxJudges'] = $maxJudges;

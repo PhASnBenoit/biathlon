@@ -3,36 +3,42 @@
 session_start();
 require "cbdd.php";
 
-// Est-ce une reprise de connexion ?
-if (isset($_COOKIE['biathlon_token'])) {
-    // le juge s'est déjà connecté il y a longtemps ou pas !
+// lecture état éventuellement modifié par l'arbitre
+$state = $db->getState();
+$_SESSION['state'] = $state;
+
+if (isset($_COOKIE['biathlon_juge_token'])) {
     $cookieToken = $_COOKIE['biathlon_juge_token'];
-    $datas = $db->getTokenJuge();    // charge l'eventuel token corrrespondant à un juge.
-    if ($cookieToken === $data['token']) {  // Si token reconnu
-        // lire l'état dans la base
-        $state = $db = getState();
-        $_SESSION['state'] = $state;
-        // donner la page correspondante
-        if ($state == '0')
-            header("location: juge.php");
-        if ($state == '3')
-            header("location: juge3.php");
-    } else {  // mauvais token
-        $stmt = $db->getNbJuges();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row['nb_juges'] == $row['max_juges'])
-            header("location: public.php");
-    } // else
-} // si token
+    $data = $db->getTokenJuge($cookieToken);
+} else {
+    // vérif nbmax juge atteint si nouveau juge.
+    $stmt = $db->getNbJuges();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row['nb_juges'] === $row['max_juges']) {
+        header("location: public.php");
+        exit();
+    } // if juge
+} // else
 
-// vérifier que nbJudge pas atteint le max.
-$stmt = $db->getNbJuges();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-if ($row['nb_juges'] === $row['max_juges'])
-    header("location: public.php");
+// donner la page correspondante
+switch ($_SESSION['state']) {
+    case 0:
+        header("location: juge.php");
+        exit();
+    case 3:
+        // si bon juge on peut aller à juge3
+        if ($cookieToken === $data['token']) {
+            header('Location: juge3.php');
+            exit();
+        } // if token pas bon
+        header("location: public.php");
+        exit();
+    // 1 ou 2 on reste sur la page
+} // sw
 
-// 2 possibilités : Attente départ course ou entrée comme nouveau juge
-
+// arrivée ici, 2 possibilités :
+// 1 - Attente départ course
+// 2 - nouveau juge
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +51,7 @@ if ($row['nb_juges'] === $row['max_juges'])
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function saveJudge() {
+            alert('saveJudge');
             $.get('check_state.php', function(response) {
                     if (response.trim() === '0') {
                        $('#status').text("L'arbitre a annulé la course !");
@@ -55,20 +62,24 @@ if ($row['nb_juges'] === $row['max_juges'])
             let runnerName = $('#runnerName').val();
             $.post('save_judge.php', { runnerName: runnerName, judgeName: judgeName }, function(response) {
                 $('#status').html(response);
-                const textRN = document.getElementById('runnerName');
-                const textJN = document.getElementById('judgeName');
-                textRN.disabled = true;
-                textJN.disabled = true;
                 waitForGo();
             });
         } // saveJudge
 
         function waitForGo() {
+            const btSave = document.getElementById('bt-sauver');
+            const textRN = document.getElementById('runnerName');
+            const textJN = document.getElementById('judgeName');
+            textRN.disabled = true;
+            textJN.disabled = true;
+            btSave.disabled = true;
+            $('#status').text('Attente du démarrage de la course !');
             let interval = setInterval(function() {
                 $.get('check_state.php', function(response) {
                     if (response.trim() === '3') { // L'arbitre a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
+                        alert('waitForGo: avant juge3');
                         window.location.ref = "juge3.php";
                     } // if juges connectés
                 });
@@ -78,11 +89,12 @@ if ($row['nb_juges'] === $row['max_juges'])
         $(document).ready(function() {
         <?php
         if (isset($_SESSION['runnerName'])) { // si paramétrage déjà fait
-            echo "window.onload = waitForGo();";
+            echo "alert('waitForGo'); onload = waitForGo();";
         } else {
         ?>
             $('#configJuge').on('submit', function(e) {
                 e.preventDefault();
+                alert('saveJudge');
                 saveJudge();
             });
         <?php
@@ -103,7 +115,7 @@ if ($row['nb_juges'] === $row['max_juges'])
         <label for="runnerName">Nom du coureur :</label>
         <input type="text" name="runnerName" id="runnerName" required>
         <br>
-        <button type="submit" name="bt-sauver" id="bt-sauver" value="sauver">Sauver et attendre le départ</button>
+        <button type="submit" name="bt-sauver" id="bt-sauver" value="bt-sauver">Sauver et attendre le départ</button>
     </form>
     <div id="status">Définissez les paramètres...</div>
     <footer>
