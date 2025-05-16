@@ -65,6 +65,12 @@ class CBdd {
         return $result;
     } // setTokenArbitre
 
+    public function setTokenJuges($token) {
+        $sql = "UPDATE race SET token = :token";
+        $result = $this->update($sql, ['token' => $token]);
+        return $result;
+    } // setTokenArbitre
+
     public function getTokenArbitre() {  // ARBITRE
         $sql = "SELECT token FROM config LIMIT 1";
         $result = $this->select($sql);

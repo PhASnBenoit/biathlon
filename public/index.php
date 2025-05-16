@@ -1,8 +1,7 @@
 <?php
-// arbitre2.php
-session_start(); // Toujours ouvrir la session en début de script
+// index.php profil public
+session_start();
 require 'cbdd.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +13,7 @@ require 'cbdd.php';
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>BIATHLON SUIVI DE COURSE</title>
-    <link rel="stylesheet" href="style.css?v=1.3">
+    <link rel="stylesheet" href="/biathlon/style.css?v=1.3">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -27,9 +26,6 @@ require 'cbdd.php';
         <th>Num</th>
         <th>Coureur</th>
         <?php
-          //for ($i = 1; $i <= 9; $i++) {
-          //    echo "<th>t$i</th>";
-          //}
           echo "<th>2T1</th>";
           echo "<th>ST1</th>";
           echo "<th>TP1</th>";

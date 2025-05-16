@@ -16,6 +16,7 @@ if ($token != $data['token']) {
     exit();
 } // if token
 
+// MACHINE A ETATS ----------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-temps'])) {
   // TODO sauver le temps selon l'étape de la course
   // prévoir et sauver le nombre de pénalité
@@ -28,7 +29,7 @@ if (isset($_SESSION['state'])) {
     switch ($_SESSION['state']) {
         case 0:
         case 1:
-            header("Location: index.php");
+            header("Location: /juge/");
             exit();
         case 2:
             header("Location: juge2.php");
@@ -86,9 +87,6 @@ if (isset($_SESSION['state'])) {
         <th>Num</th>
         <th>Coureur</th>
         <?php
-          //for ($i = 1; $i <= 9; $i++) {
-          //    echo "<th>t$i</th>";
-          //}
           echo "<th>2T1</th>";
           echo "<th>ST1</th>";
           echo "<th>TP1</th>";
@@ -117,7 +115,7 @@ if (isset($_SESSION['state'])) {
 
   <script>
     async function loadData() {
-      const response = await fetch('refreshPublic.inc.php');
+      const response = await fetch('/public/refreshPublic.inc.php');
       const html = await response.text();
       document.getElementById('table-body').innerHTML = html;
     } // async

@@ -34,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
     $res = $db->saveParamsRace($_SESSION['raceName'], $_SESSION['judgeCount']);
     $db->setState(1);
     $_SESSION['state'] = 1;
-    //echo "Course sauvegardée.";
 } // if
 ?>
 
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
             $('#bt-sauver').hide();
             $('#raceName').prop('disabled', true);
             $('#judgeCount').prop('disabled', true);
-            $('#status').html("<img src='/biathlon/images/wondering-pondering.gif' alt='Patience...' width='200'> Attente des juges...");
+            $('#status').html("<img src='/biathlon/images/wondering-pondering.gif' alt='Patience...' width='100'> Attente des juges...");
 
             let interval = setInterval(function() {
                 $.get('/biathlon/check_state.php', function(response) {

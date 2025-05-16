@@ -5,16 +5,18 @@ require '../cbdd.php';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
-    header("Location: /arbitre/");
+    echo "pas de cookie !";
     exit();
+    header("Location: /arbitre/");
 } // if cookie
 
 $cookieToken = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
 
 if ($cookieToken !== $tokenBdd) {
-    header("Location: /arbitre/");
+    echo "mauvais token !";
     exit();
+    header("Location: /arbitre/");
 } // if token
 
 // Si la session existe, décider où aller

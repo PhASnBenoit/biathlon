@@ -14,7 +14,7 @@
     <script>
         function checkStatus() {
             $.ajax({
-                url: 'check_state.php',
+                url: '/biathlon/check_state.php',
                 method: 'GET',
                 success: function(response) {
                     if (response.trim() >= '1') {

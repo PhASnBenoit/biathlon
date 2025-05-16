@@ -1,4 +1,5 @@
 <?php
+// index.php Arbitre
 require '../cbdd.php';
 
 // Cas où l'arbitre entre un code
@@ -6,25 +7,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
     $code = $_POST['code'];
 
     if ($db->isGoodCode($code)) {
-        // Suppression des cookies existants
-        foreach ($_COOKIE as $name => $value) {
-            setcookie($name, '', time() - 3600, '/');
-        }
-
+        setcookie('biathlon_arbitre_token', '', time() - 3600, '/');
         session_start();
+        $_SESSION = array();  // détruit le tableau session
         $_SESSION['id'] = $code;
         $_SESSION['state'] = 0;
-
         $db->setState(0);
         $db->setNbJuges(0);
         $db->viderTableRace();
 
+        // effacer les cookies de tous les profils
+        foreach ($_COOKIE as $name => $value) {
+            // Supprime le cookie en le réécrivant avec une date expirée
+            setcookie($name, '', time() - 3600, '/');
+        } // for
         // Création et stockage du token
         $token = bin2hex(random_bytes(16));
         setcookie('biathlon_arbitre_token', $token, time() + 3600, "/");
         $db->setTokenArbitre($token);
         $_SESSION['tokenArbitre'] = $token;
-
         header("Location: arbitre1.php");
         exit();
     } else {
@@ -43,8 +44,8 @@ if (!empty($_COOKIE['biathlon_arbitre_token'])) {
         $_SESSION['state'] = $db->getState();
 
         switch ($_SESSION['state']) {
-            case 0:
-            case 1:
+            case 0: // mot de passe entrée
+            case 1: // course paramétrée
                 header("Location: arbitre1.php");
                 break;
             case 2:
@@ -54,9 +55,9 @@ if (!empty($_COOKIE['biathlon_arbitre_token'])) {
                 header("Location: arbitre3.php");
                 break;
         } // sw
+        echo "Erreur !";
         exit();
     } // if token
-    // Token invalide : on ne redirige pas ici, intentionnellement
 } // if cookie
 ?>
 
