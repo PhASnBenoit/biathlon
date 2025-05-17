@@ -1,6 +1,9 @@
 <?php
 // index.php Arbitre
 require '../cbdd.php';
+require '../cpage.php';
+$titre = 'BIATHLON CODE ARBITRE';
+$foot = 'Biathlon Supervision System';
 
 // Cas où l'arbitre entre un code
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
@@ -59,24 +62,11 @@ if (!empty($_COOKIE['biathlon_arbitre_token'])) {
         exit();
     } // if token
 } // if cookie
+
+$page->entete($titre);
+$page->finHeadBody();
+$page->header($titre);
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>BIATHLON CODE ARBITRE</title>
-    <link rel="stylesheet" href="/biathlon/style.css">
-</head>
-<body>
-
-<header>
-    BIATHLON CODE ARBITRE
-</header>
 
 <main>
     <h1>Vérification du Code</h1>
@@ -87,9 +77,4 @@ if (!empty($_COOKIE['biathlon_arbitre_token'])) {
     </form>
 </main>
 
-<footer>
-    © 2025 - Biathlon Supervision System
-</footer>
-
-</body>
-</html>
+<?php $page->footer($foot);?>

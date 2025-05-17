@@ -1,6 +1,9 @@
 <?php
 // juge.php
 require "../cbdd.php";
+require '../cpage.php';
+$titre = 'BIATHLON PARAMETRES JUGE';
+$foot = 'Biathlon Supervision System';
 
 if (isset($_COOKIE['biathlon_juge_token'])) {
 echo "Cookie présent<br>";
@@ -89,18 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
         $db->unlockTable();     //               DEBLOCAGE DES TABLES
 } // if
 
+$page->entete($titre);
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biathlon : Juge</title>
-    <link rel="stylesheet" href="/biathlon/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-
         function waitForGo() {
             <?php
             if (isset($_SESSION['judgeName'])) { // nécessaire pour une reprise de connexion
@@ -150,11 +144,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
         ?>
     </script>
 
-</head>
-<body>
-    <header>
-        JUGE : Configuration
-    </header>
+<?php $page->finHeadBody();?>
+<?php $page->header($titre);?>
+
     <form id="configJuge" method="post" action="juge2.php">
         <label for="judgeName">Votre nom (juge) :</label>
         <input type="text" name="judgeName" id="judgeName" required>
@@ -165,8 +157,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
         <button type="submit" name="bt-sauver" id="bt-sauver" value="bt-sauver">Sauver et attendre le départ</button>
     </form>
     <div id="status">Définissez les paramètres...</div>
-    <footer>
-        © 2025 - Biathlon Supervision System
-    </footer>
-</body>
-</html>
+
+<?php $page->footer($foot);?>

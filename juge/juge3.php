@@ -41,77 +41,34 @@ if (isset($_SESSION['state'])) {
 //
 // affichage maintenant du déroulement de la course avec gestion du bouton TEMPS INTERMEDIAIRE
 //
-?>
+require '../cpage.php';
+$titre = 'BIATHLON SUIVI COURSE JUGE';
+$foot = 'Biathlon Supervision System';
+$page->entete($titre);
+$page->finHeadBody();
+$page->header($titre);
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>BIATHLON SUIVI COURSE JUGE</title>
-    <link rel="stylesheet" href="/biathlon/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <header>
-        BIATHLON SUIVI COURSE JUGE
-    </header>
-    <?php
-        // afficher les paramètres de la course
-        $stmt = $db->getParamsCourse();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    ?>
+// afficher les paramètres de la course
+$stmt = $db->getParamsCourse();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+?>
         <div id="params">
             Nom de la course : <?php echo $row['nom_course']; ?><br>
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
             -----<br>
-    <?php
+<?php
         $stmt = $db->getRace();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
             } // wh
-    ?>
+?>
         </div>
     <form action="juge3.php" method="post">
         <button type="submit" name="bt-temps" id="bt-temps" value="bt-temps" >TEMPS</button>
     </form>
-
     <div id="status">Course en cours !</div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Num</th>
-        <th>Coureur</th>
-        <?php
-          echo "<th>2T1</th>";
-          echo "<th>ST1</th>";
-          echo "<th>TP1</th>";
-          echo "<th>2T2</th>";
-          echo "<th>ST2</th>";
-          echo "<th>TP2</th>";
-          echo "<th>2T3</th>";
-          echo "<th>ST3</th>";
-          echo "<th>TP3</th>";
-          echo "<th>Total</th>";
-        ?>
-      </tr>
-    </thead>
-    <tbody id="table-body">
-      <!-- Contenu chargé dynamiquement par AJAX -->
-    </tbody>
-    </table>
-      <?php
-        echo "Temps au format min:sec:cent.<br>";
-        echo "2T : 2 tours de stade. ";
-        echo "ST : Séquence de 5 tirs. ";
-        echo "TP : Tours de pénalité. <br>";
-
-        //if ($_POST['bt-go']) {
-      ?>
+<?php $page->tablePublic(); ?>
 
   <script>
     async function loadData() {
@@ -123,12 +80,4 @@ if (isset($_SESSION['state'])) {
     setInterval(loadData, 2000); // Rafraîchissement toutes les 2 secondes
   </script>
 
-  <?php
-        //} // fin go
-  ?>
-
-    <footer>
-        © 2025 - Biathlon Supervision System
-    </footer>
-</body>
-</html>
+<?php $page->footer($foot);?>

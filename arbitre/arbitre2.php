@@ -2,6 +2,9 @@
 // arbitre2.php
 session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
+require '../cpage.php';
+$titre = 'BIATHLON LANCEMENT COURSE ARBITRE';
+$foot = 'Biathlon Supervision System';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
@@ -39,39 +42,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
     $_SESSION['state'] = 3;
     header("Location: arbitre3.php");
 } // if post go
-?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>BIATHLON LANCEMENT COURSE ARBITRE</title>
-    <link rel="stylesheet" href="/biathlon/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <header>
-        BIATHLON LANCEMENT COURSE ARBITRE
-    </header>
-    <?php
-        // afficher les paramètres de la course
-        $stmt = $db->getParamsCourse();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    ?>
+$page->entete($titre);
+$page->finHeadBody();
+$page->header($titre);
+
+// afficher les paramètres de la course
+$stmt = $db->getParamsCourse();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+?>
         <div id="params">
             Nom de la course : <?php echo $row['nom_course']; ?><br>
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
             -----<br>
-    <?php
+<?php
         $stmt = $db->getRace();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
             } // wh
-    ?>
+?>
         </div>
     <form action="arbitre2.php" method="post">
         <button type="submit" name="bt-go" id="bt-go" value="bt-go" >GO</button>
@@ -79,8 +68,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
 
     </form>
     <div id="status">Cliquez pour démarrer la course !</div>
-    <footer>
-        © 2025 - Biathlon Supervision System
-    </footer>
-</body>
-</html>
+<?php $page->footer($foot);?>

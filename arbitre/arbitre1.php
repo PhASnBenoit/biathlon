@@ -2,6 +2,9 @@
 // arbitre1.php
 session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
+require '../cpage.php';
+$titre = 'BIATHLON PARAMETRES ARBITRE';
+$foot = 'Biathlon Supervision System';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_arbitre_token'])) {
@@ -35,20 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
     $db->setState(1);
     $_SESSION['state'] = 1;
 } // if
+
+$page->entete($titre);
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <title>BIATHLON CONFIGURATION ARBITRE</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/biathlon/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
         function waitForJudges() {
             // Ici on protège PHP avec isset pour éviter erreur JS si pas défini
@@ -75,18 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
         } // waitForJudges
 
         $(document).ready(function() {
-            <?php
+<?php
             if (isset($_SESSION['state'])) { // si paramétrage déjà fait
                 echo "window.onload = waitForJudges();";
             }
-            ?>
+?>
         });
     </script>
-</head>
-<body>
-    <header>
-        BIATHLON CONFIGURATION ARBITRE
-    </header>
+
+<?php $page->finHeadBody();?>
+<?php $page->header($titre);?>
 
     <form id="configCourse" method="post">
         <label for="raceName">Nom course :</label>
@@ -101,8 +91,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
 
     <div id="status">Définissez les paramètres...</div>
 
-    <footer>
-        © 2025 - Biathlon Supervision System
-    </footer>
-</body>
-</html>
+<?php $page->footer($foot);?>
