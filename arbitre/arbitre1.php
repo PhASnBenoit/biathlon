@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
         function waitForJudges() {
             // Ici on protège PHP avec isset pour éviter erreur JS si pas défini
             <?php
-            echo "let wraceName = '".$_SESSION['raceName']."';\n";
-            echo "let wjudgeCount = ".$_SESSION['judgeCount'].";\n";
+            echo "let wraceName = '".(isset($_SESSION['raceName'])?$_SESSION['raceName']:'-')."';\n";
+            echo "let wjudgeCount = ".(isset($_SESSION['judgeCount'])?$_SESSION['judgeCount']:0).";\n";
             ?>
             $('#raceName').val(wraceName);
             $('#judgeCount').val(wjudgeCount);

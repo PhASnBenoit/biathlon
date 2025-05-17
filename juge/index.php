@@ -17,7 +17,13 @@
                 url: '/biathlon/check_state.php',
                 method: 'GET',
                 success: function(response) {
-                    if (response.trim() >= '1') {
+                    if (response.trim() == 3) {
+                        $('#status').text("Course en cours...");
+                        clearInterval(interval);
+                        window.location.href = 'juge3.php';
+                    }
+
+                    if (response.trim()==1 || response.trim()==2) {
                         $('#status').text("Autorisation de l'arbitre");
                         clearInterval(interval);
                         window.location.href = 'juge2.php';

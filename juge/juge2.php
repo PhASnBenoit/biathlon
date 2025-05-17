@@ -3,17 +3,21 @@
 require "../cbdd.php";
 
 if (isset($_COOKIE['biathlon_juge_token'])) {
+echo "Cookie présent<br>";
     $cookieToken = $_COOKIE['biathlon_juge_token'];
     $data = $db->getTokenJuge($cookieToken);
     if ($data['token'] !== $cookieToken) {
+echo "token diff<br>";
+exit();
         header("location: /juge/");
     } // if token diff
-    echo "Cookie existe, token égaux.<br>";
+echo "token ok<br>";
     session_start();
     // lecture état éventuellement modifié par l'arbitre
     $state = $db->getState();
     $_SESSION['state'] = $state;
     // donner la page correspondante
+echo "state = ".$_SESSION['state']."<br>";
     switch ($_SESSION['state']) {
         case 0:
             header("location: /juge/");
@@ -21,12 +25,12 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
         case 3:
             // si bon juge on peut aller à juge3
             if ($cookieToken === $data['token']) {
+                echo "goto juge3<br>";
                 header('Location: juge3.php');
             } // if token pas bon
             header("location: /public/");
         // 1 ou 2 on reste sur la page
     } // sw
-    echo "On reste sur cette page.<br>";
 } else {
     // vérif nbmax juge atteint si nouveau juge.
     $stmt = $db->getNbJuges();
@@ -43,7 +47,6 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
     $runnerName = $_POST['runnerName'];
     $judgeName = $_POST['judgeName'];
-    echo "Validation du formulaire $runnerName $judgeName <br>";
     // bloquer la table config
     $db->lockTable("activity WRITE, config WRITE, race ", "WRITE");  // BLOCAGE DES TABLES
         // lire la valeur de nb_juges
@@ -51,9 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
         $row = $req->fetch(PDO::FETCH_ASSOC);
         $noJudge = $row['nb_juges'];
         $maxJudges = $row['max_juges'];
-        echo "noJuge = $noJudge et max = $maxJudges<br>";
         if ($noJudge < $maxJudges) { // pas créer plus de juges que le max défini
-            echo "Création d'un juge<br>";
             // Suppression du cookie existant
             setcookie('biathlon_juge_token', '', time() - 3600, '/');
             $noJudge++;
@@ -87,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
         // débloquer la table
         $db->unlockTable();     //               DEBLOCAGE DES TABLES
 } // if
-echo "On va afficher la page WEB.<br>";
 
 ?>
 
@@ -104,9 +104,11 @@ echo "On va afficher la page WEB.<br>";
         function waitForGo() {
             <?php
             if (isset($_SESSION['judgeName'])) { // nécessaire pour une reprise de connexion
+                echo "wno = '".$_SESSION['no']."';\n";
                 echo "wjudgeName = '".$_SESSION['judgeName']."';\n";
                 echo "wrunnerName = '".$_SESSION['runnerName']."';\n";
             } else {
+                echo "wno = '-';\n";
                 echo "wjudgeName = 'NomJuge';\n";
                 echo "wrunnerName = 'NomCoureur';\n";
             } // else
@@ -116,11 +118,21 @@ echo "On va afficher la page WEB.<br>";
             $('#bt-sauver').hide();
             $('#runnerName').prop('disabled', true);
             $('#judgeName').prop('disabled', true);
-            $('#status').html("<img src='/biathlon/images/wondering-pondering.gif' alt='Patience...' width='100'> Attente du démarrage de la course !");
-            alert('dans waitForGo');
+            const $status = $('#status');                 // cache
+            // construction propre du contenu
+            const $img = $('<img>', {
+                src: '/biathlon/images/wondering-pondering.gif',
+                alt: 'Patience…',
+                width: 100
+            });
+            const $text = $(`
+                <span>Attente du démarrage de la course<br>
+                    Vous êtes le juge ${wno} !</span>`);
+            $status.empty().append($img, $text);
+
             let interval = setInterval(function() {
                 $.get('/biathlon/check_state.php', function(response) {
-                    if (response.trim() === '3') { // L'arbitre a fait le GO
+                    if (response.trim() == '3') { // L'arbitre a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
                         window.location.ref = "juge3.php";
@@ -131,9 +143,9 @@ echo "On va afficher la page WEB.<br>";
 
         <?php
               if (isset($_SESSION['runnerName'])) { // si paramétrage déjà fait
-                echo ' $(document).ready(function() {';
-                echo " alert('SESSION OK');\n  onload = waitForGo();";
-                echo "});";
+                echo '$(document).ready(function() {';
+                echo '  onload = waitForGo();';
+                echo '});';
               } // if
         ?>
     </script>

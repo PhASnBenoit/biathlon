@@ -119,7 +119,7 @@ if (isset($_SESSION['state'])) {
 
   <script>
     async function loadData() {
-      const response = await fetch('../public/refreshPublic.inc.php');
+      const response = await fetch('/public/refreshPublic.inc.php');
       const html = await response.text();
       document.getElementById('table-body').innerHTML = html;
     } // async

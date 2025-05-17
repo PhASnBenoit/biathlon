@@ -1,7 +1,7 @@
 <?php
 // index.php profil public
 session_start();
-require 'cbdd.php';
+require '../cbdd.php';
 ?>
 
 <!DOCTYPE html>
