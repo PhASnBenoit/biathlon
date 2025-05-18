@@ -128,7 +128,7 @@ $page->entete($titre);
                     if (response.trim() == '3') { // L'arbitre a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
-                        window.location.ref = 'juge3.php';
+                        window.location.href = 'juge3.php';
                     } // if juges connectés
                 });
             }, 1000);
