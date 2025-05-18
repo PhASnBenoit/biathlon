@@ -23,8 +23,7 @@ class CBdd {
         return $exists;
     } // isGoodCode
 
-    public function set_t0() {  // ARBITRE
-        $t0 = hrtime(true);
+    public function set_t0($t0) {  // ARBITRE
         $sql = "UPDATE race SET t0 = :t0";
         $result = $this->update($sql, ['t0' => $t0]);
         return $result;
@@ -46,7 +45,7 @@ class CBdd {
         $sql = "UPDATE race SET runnerName = :runnerName, judgeName = :judgeName, token = :token WHERE num = :num";
         $result = $this->update($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
         if ($result === 0) {
-            $sql = "INSERT INTO race (num, judgeState, runnerName, judgeName, token) VALUES (:num, 1, :runnerName, :judgeName, :token)";
+            $sql = "INSERT INTO race (num, judgeState, runnerName, judgeName, token) VALUES (:num, 0, :runnerName, :judgeName, :token)";
             $result = $this->insert($sql, ['runnerName' => $runnerName, 'judgeName' => $judgeName, 'num' => $num, 'token' => $token]);
             return $result;  // c'est le lastInsertId
         } // rowCount=0
@@ -70,6 +69,13 @@ class CBdd {
         $result = $this->update($sql, ['token' => $token]);
         return $result;
     } // setTokenArbitre
+
+    public function get_t0() {  // ARBITRE
+        $sql = "SELECT t0 FROM race LIMIT 1";
+        $result = $this->select($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row['t0'];
+    } // getTokenArbitre
 
     public function getTokenArbitre() {  // ARBITRE
         $sql = "SELECT token FROM config LIMIT 1";
@@ -95,11 +101,25 @@ class CBdd {
         return $row['state'];
     } // getState
 
+    public function get_judgeState($num) {  // PUBLIC
+        $sql = "SELECT judgeState FROM race WHERE num=:num";
+        $result = $this->select($sql, ['num'=>$num]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row['judgeState'];
+    } // get_judgeState
+
     public function setState($etat) {
         $sql = "UPDATE activity SET state = :etat WHERE id_activity = 1";
         $result = $this->update($sql, ['etat' => $etat]);
         return $result;
     } // setState
+
+    public function setTime($numJuge, $judgeState, $chrono) {
+        $t = "t$judgeState";
+        $sql = "UPDATE race SET judgeState = :js, $t = :t  WHERE num = :num";
+        $result = $this->update($sql, ['js' => $judgeState, 't' => $chrono, 'num' => $numJuge]);
+        return $result;
+    } // setTime
 
     public function getNbJuges() {
         $sql = "SELECT nb_juges, max_juges FROM config LIMIT 1";

@@ -8,6 +8,7 @@ $foot = 'Biathlon Supervision System';
 if (isset($_COOKIE['biathlon_juge_token'])) {
 echo "Cookie présent<br>";
     $cookieToken = $_COOKIE['biathlon_juge_token'];
+
     $data = $db->getTokenJuge($cookieToken);
     if ($data['token'] !== $cookieToken) {
 echo "token diff<br>";
@@ -15,10 +16,12 @@ exit();
         header("location: /juge/");
     } // if token diff
 echo "token ok<br>";
+
     session_start();
     // lecture état éventuellement modifié par l'arbitre
     $state = $db->getState();
     $_SESSION['state'] = $state;
+
     // donner la page correspondante
 echo "state = ".$_SESSION['state']."<br>";
     switch ($_SESSION['state']) {
@@ -26,12 +29,8 @@ echo "state = ".$_SESSION['state']."<br>";
             header("location: /juge/");
             exit();
         case 3:
-            // si bon juge on peut aller à juge3
-            if ($cookieToken === $data['token']) {
-                echo "goto juge3<br>";
-                header('Location: juge3.php');
-            } // if token pas bon
-            header("location: /public/");
+            header('Location: juge3.php');
+            exit();
         // 1 ou 2 on reste sur la page
     } // sw
 } else {
@@ -129,7 +128,7 @@ $page->entete($titre);
                     if (response.trim() == '3') { // L'arbitre a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
-                        window.location.ref = "juge3.php";
+                        window.location.ref = 'juge3.php';
                     } // if juges connectés
                 });
             }, 1000);

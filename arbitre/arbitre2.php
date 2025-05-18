@@ -37,8 +37,9 @@ if (isset($_SESSION['state'])) {
 } // isset
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
+    $t0 = hrtime(true);
+    $db->set_t0($t0);
     $db->setState(3);
-    $db->set_t0();
     $_SESSION['state'] = 3;
     header("Location: arbitre3.php");
 } // if post go

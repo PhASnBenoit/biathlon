@@ -2,6 +2,9 @@
 // juge3.php
 session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
+require '../cpage.php';
+$titre = 'BIATHLON SUIVI COURSE JUGE';
+$foot = 'Biathlon Supervision System';
 
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_juge_token'])) {
@@ -18,32 +21,22 @@ if ($token != $data['token']) {
 
 // MACHINE A ETATS ----------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-temps'])) {
-  // TODO sauver le temps selon l'étape de la course
-  // prévoir et sauver le nombre de pénalité
-    echo "bouton temps appuyé !";
-    exit();
+    // TODO prévoir et sauver le nombre de pénalité
+    $t = hrtime(true);
+    $judgeState = $db->get_judgeState($_SESSION['no']);  // on récupère le numéro de séquence course.
+    if ($judgeState < 9) {
+      $t0 = $db->get_t0();
+      $db->setTime($_SESSION['no'], $judgeState+1, $t-$t0);
+    } // if
 } // if post go
 
 // Si la session existe, décider où aller
-if (isset($_SESSION['state'])) {
-    switch ($_SESSION['state']) {
-        case 0:
-        case 1:
-            header("Location: /juge/");
-            exit();
-        case 2:
-            header("Location: juge2.php");
-            exit();
-        // 3 : On reste sur la page
-    } // sw
-} // isset
-
+if (isset($_SESSION['state']))
+    if ($_SESSION['state'] != 3)
+         header("Location: /juge/");
 //
 // affichage maintenant du déroulement de la course avec gestion du bouton TEMPS INTERMEDIAIRE
 //
-require '../cpage.php';
-$titre = 'BIATHLON SUIVI COURSE JUGE';
-$foot = 'Biathlon Supervision System';
 $page->entete($titre);
 $page->finHeadBody();
 $page->header($titre);

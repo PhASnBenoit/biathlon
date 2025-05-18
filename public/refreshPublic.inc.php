@@ -1,12 +1,17 @@
 <?php
 require '../cbdd.php';
 
-function format_duree($secondes) {
-    $minutes = floor($secondes / 60);
-    $restant = $secondes - ($minutes * 60);
-    $secondes_int = floor($restant);
-    $centiemes = floor(($restant - $secondes_int) * 100);
-    return sprintf('%02d:%02d:%02d', $minutes, $secondes_int, $centiemes);
+function format_duree($nanoseconds) {
+    // Convertir en secondes
+    $totalSeconds = $nanoseconds / 1e9;
+
+    // Extraire minutes, secondes et centièmes
+    $minutes = floor($totalSeconds / 60);
+    $seconds = floor($totalSeconds % 60);
+    $centièmes = floor(($totalSeconds - floor($totalSeconds)) * 100);
+
+    // Formater avec deux chiffres pour secondes et centièmes
+    return sprintf("%02d:%02d:%02d", $minutes, $seconds, $centièmes);
 }
 
 $etat = $db->getState();
