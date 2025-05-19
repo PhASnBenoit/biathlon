@@ -21,13 +21,14 @@ if ($token != $data['token']) {
 
 // MACHINE A ETATS ----------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-temps'])) {
-    // TODO prévoir et sauver le nombre de pénalité
     $t = hrtime(true);
     $judgeState = $db->get_judgeState($_SESSION['no']);  // on récupère le numéro de séquence course.
-    if ($judgeState < 10) {
+    if ($judgeState < 9) {
       $t0 = $db->get_t0();
       $db->setTime($_SESSION['no'], $judgeState+1, $t-$t0);
-    } // if
+    }
+    if ($judgeState == 8)
+      $_SESSION["fini"] = 1; // if
 } // if post go
 
 // Si la session existe, décider où aller
@@ -51,15 +52,20 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
             -----<br>
 <?php
         $stmt = $db->getRace();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        foreach ($stmt as $row) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            } // wh
+        } // foreach
 ?>
         </div>
     <form action="juge3.php" method="post">
         <button type="submit" name="bt-temps" id="bt-temps" value="bt-temps" >TEMPS</button>
     </form>
-    <div id="status">Course en cours !</div>
+<?php
+    if ($_SESSION['fini'] == 1)
+      echo '<div id="status">Course terminée !</div>';
+    else
+      echo '<div id="status">Course en cours !</div>';
+?>
 
 <?php $page->tablePublic(); ?>
 

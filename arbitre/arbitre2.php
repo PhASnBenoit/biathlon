@@ -15,7 +15,6 @@ if (!isset($_COOKIE['biathlon_arbitre_token'])) {
 
 $cookieToken = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
-
 if ($cookieToken !== $tokenBdd) {
     echo "mauvais token !";
     exit();
@@ -58,9 +57,9 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
             -----<br>
 <?php
         $stmt = $db->getRace();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        foreach ($stmt as $row) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            } // wh
+        } // foreach
 ?>
         </div>
     <form action="arbitre2.php" method="post">

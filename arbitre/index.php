@@ -2,7 +2,7 @@
 // index.php Arbitre
 require '../cbdd.php';
 require '../cpage.php';
-$titre = 'BIATHLON CODE ARBITRE v1.1 by PhA (2025)';
+$titre = 'BIATHLON CODE ARBITRE v1.2 by PhA (2025)';
 $foot = 'Biathlon Supervision System';
 
 // Cas où l'arbitre entre un code
@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
     $code = $_POST['code'];
 
     if ($db->isGoodCode($code)) {
-        setcookie('biathlon_arbitre_token', '', time() - 3600, '/');
         session_start();
         $_SESSION = array();  // détruit le tableau session
         $_SESSION['id'] = $code;

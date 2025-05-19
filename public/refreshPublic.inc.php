@@ -18,8 +18,7 @@ $etat = $db->getState();
 if ($etat == 3) {
     // Requête pour récupérer les colonnes nécessaires
     $donnees = $db->getRace();
-
-    foreach ($donnes as $row) {
+    foreach ($donnees as $row) {
         echo "<tr>";
         echo "<td>{$row['num']}</td>";
         echo "<td>{$row['runnerName']}</td>";

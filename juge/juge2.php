@@ -11,8 +11,8 @@ echo "Cookie présent<br>";
 
     $data = $db->getTokenJuge($cookieToken);
     if ($data['token'] !== $cookieToken) {
-echo "token diff<br>";
-exit();
+        // Suppression du cookie existant
+        setcookie('biathlon_juge_token', '', time() - 3600, '/');
         header("location: /juge/");
     } // if token diff
 echo "token ok<br>";
@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
             $_SESSION['state'] = $db->getState();
             $_SESSION['no'] = $noJudge;
             $_SESSION['token'] = $token;
+            $_SESSION['fini'] = 0;
             $_SESSION['judgeState'] = 1;
             $_SESSION['runnerName'] = $runnerName;
             $_SESSION['judgeName'] = $judgeName;

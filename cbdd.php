@@ -117,9 +117,10 @@ class CBdd {
 
     public function setTime($numJuge, $judgeState, $chrono) {
         $t = "t$judgeState";
-        if ($judgeState==10)
-            $t = "totalTime";
-        $sql = "UPDATE race SET judgeState = :js, $t = :t  WHERE num = :num";
+        if ($judgeState == 9) // fin de la nom_course
+            $sql = "UPDATE race SET judgeState = :js, $t = :t, totalTime = :t  WHERE num = :num";
+        else
+            $sql = "UPDATE race SET judgeState = :js, $t = :t  WHERE num = :num";
         $result = $this->update($sql, ['js' => $judgeState, 't' => $chrono, 'num' => $numJuge]);
         return $result;
     } // setTime

@@ -21,12 +21,14 @@ if ($token !== $tokenBdd) {
 } // if token
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-fin'])) {
+    require 'ccsv.php';
+    $courses = $db->getRace();
+    print_r($courses);
+    $csv->composeFile($_SESSION["raceName"], $_SESSION["judgeCount"], $courses);
+    // réinitialiser les courses
     $db->setState(0);
-    $_SESSION['state'] = 0;
-    // sauver les données au format CSV
-    // réinitialiser les tables
+    $_SESSION = array();
     header("Location: raz.php");
-    exit();
 } // if post go
 
 // Si la session existe, décider où aller
@@ -61,9 +63,9 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
             -----<br>
 <?php
         $stmt = $db->getRace();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        foreach ($stmt as $row) {
             echo $row['judgeName']." est le juge ".$row['num']." de ".$row['runnerName']."<br>";
-            } // wh
+        } // foreach
 ?>
         </div>
     <form action="arbitre3.php" method="post">
