@@ -17,9 +17,9 @@ function format_duree($nanoseconds) {
 $etat = $db->getState();
 if ($etat == 3) {
     // Requête pour récupérer les colonnes nécessaires
-    $stmt = $db->getRace();
+    $donnees = $db->getRace();
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    foreach ($donnes as $row) {
         echo "<tr>";
         echo "<td>{$row['num']}</td>";
         echo "<td>{$row['runnerName']}</td>";
@@ -43,7 +43,7 @@ if ($etat == 3) {
         } // for
         echo "<td  class='bold'>".htmlspecialchars(format_duree($row['totalTime']))."</td>";
         echo "</tr>";
-    } // wh
+    } // foreach
 } else {
     echo "<td class='bold' colspan='12'>Pas de course en cours !</td>";
 }// else etat

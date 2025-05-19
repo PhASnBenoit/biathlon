@@ -13,7 +13,6 @@ if (!isset($_COOKIE['biathlon_arbitre_token'])) {
 
 $token = $_COOKIE['biathlon_arbitre_token'];
 $tokenBdd = $db->getTokenArbitre();
-
 if ($token !== $tokenBdd) {
     exit();
 } // if token
@@ -44,10 +43,10 @@ $page->entete($titre);
     <script>
         function waitForJudges() {
             // Ici on protège PHP avec isset pour éviter erreur JS si pas défini
-            <?php
+<?php
             echo "let wraceName = '".(isset($_SESSION['raceName'])?$_SESSION['raceName']:'-')."';\n";
             echo "let wjudgeCount = ".(isset($_SESSION['judgeCount'])?$_SESSION['judgeCount']:0).";\n";
-            ?>
+?>
             $('#raceName').val(wraceName);
             $('#judgeCount').val(wjudgeCount);
             $('#bt-sauver').hide();
@@ -68,7 +67,7 @@ $page->entete($titre);
 
         $(document).ready(function() {
 <?php
-            if (isset($_SESSION['state'])) { // si paramétrage déjà fait
+            if (isset($_SESSION['raceName'])) { // si paramétrage déjà fait
                 echo "window.onload = waitForJudges();";
             }
 ?>

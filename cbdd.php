@@ -53,9 +53,10 @@ class CBdd {
     } // addJudge
 
     public function getRace() {  // PUBLIC
-        $sql = "SELECT * FROM race";
-        $result = $this->select($sql);
-        return $result;
+        $sql = "SELECT * FROM race ORDER BY num ASC";
+        $stmt = $this->select($sql);
+        $donnees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $donnees;
     } // getRace
 
     public function setTokenArbitre($token) {  // ARBITRE
