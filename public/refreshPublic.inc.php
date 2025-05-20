@@ -23,11 +23,13 @@ if ($etat == 3) {
         echo "<td>{$row['num']}</td>";
         echo "<td>{$row['runnerName']}</td>";
         $j=0;
+        $mem = 0;
         for ($i = 1; $i <= 9; $i++) {
             $val = format_duree($row["t$i"]);
+            //$dval = format_duree($mem);  // delta t
             $note = null;
 
-            // Ajouter la note si on est sur t2, t5 ou t8
+            // Ajouter les tirs réussis si on est sur t2, t5 ou t8
             unset($seq);
             if (in_array($i, [2, 5, 8])) {
                 $j++;
@@ -35,6 +37,8 @@ if ($etat == 3) {
                 $seq = isset($row[$seqTirs]) ? $row[$seqTirs] : null;
             }
             echo "<td>".htmlspecialchars($val);
+            echo "<br><span class='sub-value'>(dt=" . htmlspecialchars(format_duree($row["t$i"]-$mem)) . ")</span>";
+            $mem = $row["t$i"];
             if (isset($seq)) {
                 echo "<br><span class='sub-value'>" . htmlspecialchars($seq) . "</span>";
             }
