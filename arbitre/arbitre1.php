@@ -90,4 +90,21 @@ $page->entete($titre);
 
     <div id="status">Définissez les paramètres...</div>
 
+    <?php
+$repertoire = __DIR__ . '/../res';  // dossier où sont stockés les fichiers CSV
+$baseUrl = '/biathlon/res/';               // chemin relatif depuis le navigateur
+
+$fichiers = glob($repertoire . '/*.csv');
+
+echo "<h2>Fichiers CSV disponibles</h2>";
+echo "<ul>";
+
+foreach ($fichiers as $cheminComplet) {
+    $nomFichier = basename($cheminComplet);
+    echo '<li><a href="' . $baseUrl . $nomFichier . '" target="_blank">' . $nomFichier . '</a></li>';
+}
+
+echo "</ul>";
+?>
+
 <?php $page->footer($foot);?>

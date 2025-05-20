@@ -23,7 +23,6 @@ if ($token !== $tokenBdd) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-fin'])) {
     require 'ccsv.php';
     $courses = $db->getRace();
-    print_r($courses);
     $csv->composeFile($_SESSION["raceName"], $_SESSION["judgeCount"], $courses);
     // réinitialiser les courses
     $db->setState(0);
@@ -69,7 +68,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
         </div>
     <form action="arbitre3.php" method="post">
-        <button onclick="return confirm('Es-tu sûr de vouloir terminer la course ?');" type="submit" name="bt-fin" id="bt-fin" value="bt-fin" >FIN</button>
+        <button onclick="return confirm('Es-tu sûr de vouloir terminer la course ?\n(un fichier csv sera généré dans /biathlon/res)');" type="submit" name="bt-fin" id="bt-fin" value="bt-fin" >FIN</button>
         <a href="raz.php"> RAZ</a>
     </form>
     <div id="status">Course en cours !</div>

@@ -14,7 +14,7 @@ class CPage {
     <meta http-equiv="Expires" content="0" />
     <title>$titre</title>
     <link rel="stylesheet" href="/biathlon/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/biathlon/js/jquery.min.js"></script>
 EOT;
     echo $entete;
     } // entete

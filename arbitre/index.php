@@ -2,7 +2,7 @@
 // index.php Arbitre
 require '../cbdd.php';
 require '../cpage.php';
-$titre = 'BIATHLON CODE ARBITRE v1.2 by PhA (2025)';
+$titre = 'BIATHLON CODE ARBITRE v1.3 by PhA (2025)';
 $foot = 'Biathlon Supervision System';
 
 // Cas où l'arbitre entre un code
