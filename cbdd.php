@@ -16,14 +16,14 @@ class CBdd {
         $this->connect();
     }
 
-    public function isGoodCode($code) {  // ARBITRE
+    public function isGoodCode($code) {  // master
         $sql = "SELECT COUNT(*) FROM config WHERE code = :code";
         $result = $this->select($sql, ['code' => $code]);
         $exists = $result->fetchColumn();
         return $exists;
     } // isGoodCode
 
-    public function set_t0($t0) {  // ARBITRE
+    public function set_t0($t0) {  // master
         $sql = "UPDATE race SET t0 = :t0";
         $result = $this->update($sql, ['t0' => $t0]);
         return $result;
@@ -35,7 +35,7 @@ class CBdd {
         return $result;
     } // set_judgeState
 
-    public function saveParamsRace($raceName, $judgeCount) {  // ARBITRE
+    public function saveParamsRace($raceName, $judgeCount) {  // master
         $sql = "UPDATE config SET nom_course = :raceName, max_juges = :judgeCount WHERE id_config = 1";
         $result = $this->update($sql, ['raceName' => $raceName, 'judgeCount' => $judgeCount]);
         return $result;
@@ -59,31 +59,31 @@ class CBdd {
         return $donnees;
     } // getRace
 
-    public function setTokenArbitre($token) {  // ARBITRE
+    public function setTokenmaster($token) {  // master
         $sql = "UPDATE config SET token = :token WHERE id_config = 1";
         $result = $this->update($sql, ['token' => $token]);
         return $result;
-    } // setTokenArbitre
+    } // setTokenmaster
 
     public function setTokenJuges($token) {
         $sql = "UPDATE race SET token = :token";
         $result = $this->update($sql, ['token' => $token]);
         return $result;
-    } // setTokenArbitre
+    } // setTokenmaster
 
-    public function get_t0() {  // ARBITRE
+    public function get_t0() {  // master
         $sql = "SELECT t0 FROM race LIMIT 1";
         $result = $this->select($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row['t0'];
-    } // getTokenArbitre
+    } // getTokenmaster
 
-    public function getTokenArbitre() {  // ARBITRE
+    public function getTokenmaster() {  // master
         $sql = "SELECT token FROM config LIMIT 1";
         $result = $this->select($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row['token'];
-    } // getTokenArbitre
+    } // getTokenmaster
 
     public function getTokenJuge($token) {  // JUGE
         $sql = "SELECT token, num FROM race WHERE token = :token LIMIT 1";

@@ -18,7 +18,7 @@ $page->entete($titre);
                     }
 
                     if (response.trim()==1 || response.trim()==2) {
-                        $('#status').text("Autorisation de l'arbitre");
+                        $('#status').text("Autorisation du master");
                         clearInterval(interval);
                         window.location.href = 'juge2.php';
                     }
@@ -32,5 +32,5 @@ $page->entete($titre);
     </script>
 <?php $page->finHeadBody();?>
 <?php $page->header($titre);?>
-     <div id="status">Attente autorisation de l'arbitre</div>
+     <div id="status">Attente autorisation du master</div>
 <?php $page->footer($foot);?>

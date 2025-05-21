@@ -18,7 +18,7 @@ echo "Cookie présent<br>";
 echo "token ok<br>";
 
     session_start();
-    // lecture état éventuellement modifié par l'arbitre
+    // lecture état éventuellement modifié par l'master
     $state = $db->getState();
     $_SESSION['state'] = $state;
 
@@ -126,7 +126,7 @@ $page->entete($titre);
 
             let interval = setInterval(function() {
                 $.get('/biathlon/check_state.php', function(response) {
-                    if (response.trim() == '3') { // L'arbitre a fait le GO
+                    if (response.trim() == '3') { // master a fait le GO
                         clearInterval(interval);
                         $('#status').text('Course démarrée !');
                         window.location.href = 'juge3.php';

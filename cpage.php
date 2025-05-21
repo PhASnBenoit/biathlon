@@ -27,11 +27,13 @@ EOT;
     public function header($titre) {
         echo "<header>\n".
              "$titre\n".
-             "</header>\n";
+             "</header>\n".
+             '<main>';
     } // header
 
     public function footer($titre) {
-         echo "<footer>\n".
+         echo "</main>\n".
+              "<footer>\n".
               "© 2025 - $titre\n".
               "</footer>\n".
               "</body>\n".
