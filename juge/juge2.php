@@ -18,12 +18,12 @@ echo "Cookie présent<br>";
 echo "token ok<br>";
 
     session_start();
-    // lecture état éventuellement modifié par l'master
+    // lecture état éventuellement modifié par le master
     $state = $db->getState();
+echo "state = ".$_SESSION['state']."<br>";
     $_SESSION['state'] = $state;
 
     // donner la page correspondante
-echo "state = ".$_SESSION['state']."<br>";
     switch ($_SESSION['state']) {
         case 0:
             header("location: /juge/");
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
             $noJudge++;
             // créer le cookie
             $token = bin2hex(random_bytes(16));
-            setcookie('biathlon_juge_token', $token, time() + 1800, "/"); //
+            setcookie('biathlon_juge_token', $token, time() + 3600, "/"); //
             session_start();
             $_SESSION = array();
             $_SESSION['state'] = $db->getState();
@@ -84,9 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
             //echo "paramètres sauvegardés.<br>Vous êtes le juge $noJudge<br>En attente du départ de la course...";
         } else {// if pas plus de juge
             echo "Le nombre de juge est atteint ! impossible de continuer !<br>";
-            //echo "Vous pouvez suivre la course : www.biathlon.lab/public/";
+            echo "Vous pouvez suivre la course : www.biathlon.lab/public/";
             $db->unlockTable();     //               DEBLOCAGE DES TABLES
-            //exit();
+            exit();
         } // else max juges
         // débloquer la table
         $db->unlockTable();     //               DEBLOCAGE DES TABLES

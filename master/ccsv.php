@@ -18,14 +18,12 @@ class CCsv {
     public function composeFile($raceName, $judgeCount, $race) {
         // Nom du fichier avec date/heure
         $date = date("Y-m-d H:i:s");
-        $filename = "/srv/www/htdocs/biathlon/res/biathlon_" . date("Y-m-d_H-i-s") . ".csv";
-
+        $filename =  __DIR__ . "/../res/biathlon_" . date("Y-m-d_H-i-s") . ".csv";
         // Création du fichier
         $fichier = fopen($filename, 'w');
         if ($fichier === false) {
             die("Impossible de créer le fichier CSV.");
-        }
-
+        } // if fichier
         // ⚠️ BOM pour forcer Excel à reconnaître UTF-8
         fwrite($fichier, "\xEF\xBB\xBF");
         // Écriture de l'en-tête générale
@@ -57,9 +55,21 @@ class CCsv {
         fclose($fichier);
     } // composeFile
 
+    public function isRaspberryPi(): bool {
+        $model = @file_get_contents('/proc/device-tree/model');
+        $cpu = @file_get_contents('/proc/cpuinfo');
+        return (
+            ($model && stripos($model, 'Raspberry Pi') !== false) ||
+            ($cpu && stripos($cpu, 'BCM') !== false)
+        );
+    }
 
     public function purgerCsv() {
         $dir = __DIR__ . '/../res';  // dossier où sont stockés les fichiers CSV
+        if ($this->isRaspberryPi())
+            shell_exec("sudo chown www-data:www-data -R 755 " . escapeshellarg($dir));
+        else
+            shell_exec("sudo chown wwwrun:www -R 755 " . escapeshellarg($dir));
         $files = glob($dir . '/*.csv');
         $now = time();
         $jours = 1; // nombre de jours
