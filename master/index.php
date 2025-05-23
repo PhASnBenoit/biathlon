@@ -11,7 +11,7 @@ TODO A la mise en route, mettre un script qui place state à -1 dans la BDD
 */
 require '../cbdd.php';
 require '../cpage.php';
-$titre = 'BIATHLON AUTHENTIFICATION MASTER v1.8 by PhA (2025)';
+$titre = 'BIATHLON AUTHENTIFICATION MASTER v1.85 by PhA (2025)';
 $foot = 'Biathlon Supervision System';
 
 $state = $db->getState();

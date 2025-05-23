@@ -9,3 +9,6 @@ Le profil master (anciennement arbitre) est revu pour n'accepter qu'une connexio
 v1.8
 Déplacement des résultats sur la page de connexion du master.
 Ajout des distances préremplies pour les calculs de vitesse.
+
+v1.85 @PhA - 23/05/25
+Sauvegarde des vitesses et delta T dans le fichier csv
