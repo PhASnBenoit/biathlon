@@ -6,7 +6,7 @@ $titre = 'BIATHLON PARAMETRES JUGE';
 $foot = 'Biathlon Supervision System';
 
 if (isset($_COOKIE['biathlon_juge_token'])) {
-echo "Cookie présent<br>";
+//echo "Cookie présent<br>";
     $cookieToken = $_COOKIE['biathlon_juge_token'];
 
     $data = $db->getTokenJuge($cookieToken);
@@ -15,12 +15,12 @@ echo "Cookie présent<br>";
         setcookie('biathlon_juge_token', '', time() - 3600, '/');
         header("location: /juge/");
     } // if token diff
-echo "token ok<br>";
+//echo "token ok<br>";
 
     session_start();
     // lecture état éventuellement modifié par le master
     $state = $db->getState();
-echo "state = ".$_SESSION['state']."<br>";
+//echo "state = ".$_SESSION['state']."<br>";
     $_SESSION['state'] = $state;
 
     // donner la page correspondante

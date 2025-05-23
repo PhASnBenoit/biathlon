@@ -35,9 +35,9 @@ class CBdd {
         return $result;
     } // set_judgeState
 
-    public function saveParamsRace($raceName, $judgeCount) {  // master
-        $sql = "UPDATE config SET nom_course = :raceName, max_juges = :judgeCount WHERE id_config = 1";
-        $result = $this->update($sql, ['raceName' => $raceName, 'judgeCount' => $judgeCount]);
+    public function saveParamsRace($raceName, $judgeCount, $dist2T, $distPen) {  // master
+        $sql="UPDATE config SET nom_course=:raceName, max_juges=:judgeCount, dist2T=:dist2T, distPen=:distPen WHERE id_config=1";
+        $result = $this->update($sql,['raceName'=>$raceName, 'judgeCount'=>$judgeCount, 'dist2T'=>$dist2T, 'distPen'=>$distPen]);
         return $result;
     } // saveParamsRace
 
@@ -52,13 +52,6 @@ class CBdd {
         return $result; // rowCount
     } // addJudge
 
-    public function getRace() {  // PUBLIC
-        $sql = "SELECT * FROM race ORDER BY num ASC";
-        $stmt = $this->select($sql);
-        $donnees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $donnees;
-    } // getRace
-
     public function setTokenmaster($token) {  // master
         $sql = "UPDATE config SET token = :token WHERE id_config = 1";
         $result = $this->update($sql, ['token' => $token]);
@@ -70,6 +63,13 @@ class CBdd {
         $result = $this->update($sql, ['token' => $token]);
         return $result;
     } // setTokenmaster
+
+    public function getRace() {  // PUBLIC
+        $sql = "SELECT * FROM race ORDER BY num ASC";
+        $stmt = $this->select($sql);
+        $donnees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $donnees;
+    } // getRace
 
     public function get_t0() {  // master
         $sql = "SELECT t0 FROM race LIMIT 1";

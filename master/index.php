@@ -11,13 +11,12 @@ TODO A la mise en route, mettre un script qui place state à -1 dans la BDD
 */
 require '../cbdd.php';
 require '../cpage.php';
-$titre = 'BIATHLON AUTHENTIFICATION MASTER v1.7 by PhA (2025)';
+$titre = 'BIATHLON AUTHENTIFICATION MASTER v1.8 by PhA (2025)';
 $foot = 'Biathlon Supervision System';
 
 $state = $db->getState();
-echo $state."------<br>";
-// Cas où un cookie est présent
 
+// Cas où un cookie est présent
 if (!empty($_COOKIE['biathlon_master_token'])) {
     $token = $_COOKIE['biathlon_master_token'];
     $tokenBdd = $db->getTokenmaster();
@@ -89,6 +88,21 @@ $page->header($titre);
         <input type="password" name="code" id="codeInput" maxlength="6" required>
         <button type="submit">Commencer</button>
     </form>
+
+<?php
+    $repertoire = __DIR__ . '/../res';  // dossier où sont stockés les fichiers CSV
+    $baseUrl = '/biathlon/res/';               // chemin relatif depuis le navigateur
+    $fichiers = glob($repertoire . '/*.csv');
+    echo "<h2>Fichiers CSV disponibles</h2>";
+    echo "<ul>";
+    foreach ($fichiers as $cheminComplet) {
+        $nomFichier = basename($cheminComplet);
+        echo '<a href="' . $baseUrl . $nomFichier . '" target="_blank">' . $nomFichier . '</a><br>';
+    } // foreach
+    echo "</ul>";
+    echo "<form method='post'><button type='submit' name='purger'>Purger les anciens fichiers (>1an)</button></form>";
+?>
+
 </main>
 
 <?php $page->footer($foot);?>

@@ -6,6 +6,12 @@ require '../cpage.php';
 $titre = 'BIATHLON LANCEMENT COURSE MASTER';
 $foot = 'Biathlon Supervision System';
 
+$state = $db->getState();
+if ($state == -1) {
+    header("Location: /master/");
+    exit();
+} // if state
+
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_master_token'])) {
     echo "pas de cookie !";

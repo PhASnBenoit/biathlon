@@ -2,6 +2,13 @@
 // master3.php
 session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
+
+$state = $db->getState();
+if ($state == -1) {
+    header("Location: /master/");
+    exit();
+} // if state
+
 require '../cpage.php';
 $titre = 'BIATHLON SUIVI COURSE MASTER';
 $foot = 'Biathlon Supervision System';
@@ -21,7 +28,7 @@ if ($token !== $tokenBdd) {
 } // if token
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-fin'])) {
-    require 'ccsv.php';
+    require '../ccsv.php';
     $courses = $db->getRace();
     $csv->composeFile($_SESSION["raceName"], $_SESSION["judgeCount"], $courses);
     // réinitialiser les courses

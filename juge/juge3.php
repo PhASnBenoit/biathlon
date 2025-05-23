@@ -16,6 +16,7 @@ $token = $_COOKIE['biathlon_juge_token'];
 $data = $db->getTokenJuge($token);
 if ($token != $data['token']) {
     echo "Session terminée !";
+    header("Location: /juge/");
     exit();
 } // if token
 

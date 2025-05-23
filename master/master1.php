@@ -6,8 +6,15 @@ require '../cpage.php';
 $titre = 'BIATHLON PARAMETRES MASTER';
 $foot = 'Biathlon Supervision System';
 
+$state = $db->getState();
+if ($state == -1) {
+    header("Location: /master/");
+    exit();
+} // if state
+
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_master_token'])) {
+    header("Location: /master/");
     exit();
 } // if cookie
 
@@ -20,6 +27,9 @@ if ($token !== $tokenBdd) {
 // Si la session existe, décider où aller
 if (isset($_SESSION['state'])) {
     switch ($_SESSION['state']) {
+        case -1:
+            header("Location: /master/");
+            exit();
         case 2:
             header("Location: master2.php");
             exit();
@@ -31,14 +41,16 @@ if (isset($_SESSION['state'])) {
 } // if session
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purger'])) {
-    require 'ccsv.php';
+    require '../ccsv.php';
     $csv->purgerCsv();
 } // if 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
     $_SESSION['raceName'] = $_POST['raceName'];
     $_SESSION['judgeCount'] = $_POST['judgeCount'];
-    $res = $db->saveParamsRace($_SESSION['raceName'], $_SESSION['judgeCount']);
+    $_SESSION['dist2T'] = $_POST['dist2T'];
+    $_SESSION['distPen'] = $_POST['distPen'];
+    $res = $db->saveParamsRace($_SESSION['raceName'], $_SESSION['judgeCount'], $_SESSION['dist2T'], $_SESSION['distPen']);
     $db->setState(1);
     $_SESSION['state'] = 1;
 } // if
@@ -82,31 +94,23 @@ $page->entete($titre);
 <?php $page->finHeadBody();?>
 <?php $page->header($titre);?>
 
+<?php
+    $result = $db->getParamsCourse();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+?>
     <form id="configCourse" method="post">
         <label for="raceName">Nom course :</label>
         <input type="text" name="raceName" id="raceName" required><br>
-
-        <label for="judgeCount">Nombre de juge :</label>
+        <label for="judgeCount">Nombre de juges :</label>
         <input type="number" name="judgeCount" id="judgeCount" min="1" max="8" required><br>
-
+        <label for="dist2T">Distance 2 tours en m (2T) :</label>
+        <input type="number" name="dist2T" id="dist2T" min="100" max="999" value="<?php echo $row['dist2T'];?>" required><br>
+        <label for="distPen">Distance du tour de pénalité en m (TP) :</label>
+        <input type="number" name="distPen" id="distPen" min="50" max="300" value="<?php echo $row['distPen'];?>" required><br>
         <button type="submit" id="bt-sauver" value="bt-sauver">Sauver et attendre les juges</button>
         <a href="raz.php">RAZ</a>
     </form>
 
     <div id="status">Définissez les paramètres...</div>
-
-<?php
-    $repertoire = __DIR__ . '/../res';  // dossier où sont stockés les fichiers CSV
-    $baseUrl = '/biathlon/res/';               // chemin relatif depuis le navigateur
-    $fichiers = glob($repertoire . '/*.csv');
-    echo "<h2>Fichiers CSV disponibles</h2>";
-    echo "<ul>";
-    foreach ($fichiers as $cheminComplet) {
-        $nomFichier = basename($cheminComplet);
-        echo '<a href="' . $baseUrl . $nomFichier . '" target="_blank">' . $nomFichier . '</a><br>';
-    } // foreach
-    echo "</ul>";
-    echo "<form method='post'><button type='submit' name='purger'>Purger les anciens fichiers (>1an)</button></form>";
-?>
 
 <?php $page->footer($foot);?>
