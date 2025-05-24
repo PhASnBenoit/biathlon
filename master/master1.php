@@ -1,7 +1,7 @@
 <?php
 // master1.php
 session_start(); // Toujours ouvrir la session en début de script
-print_r($_SESSION);
+//print_r($_SESSION);
 
 require '../cbdd.php';
 require '../cpage.php';
