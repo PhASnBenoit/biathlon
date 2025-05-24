@@ -1,5 +1,6 @@
 <?php
 // index.php (juge)
+
 require '../cpage.php';
 $titre = 'BIATHLON VERIFICATION JUGE';
 $foot = 'Biathlon Supervision System';

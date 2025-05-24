@@ -16,12 +16,18 @@ class CBdd {
         $this->connect();
     }
 
-    public function isGoodCode($code) {  // master
-        $sql = "SELECT COUNT(*) FROM config WHERE code = :code";
-        $result = $this->select($sql, ['code' => $code]);
-        $exists = $result->fetchColumn();
-        return $exists;
+    public function getCodeMaster() {
+        $sql = "SELECT code FROM config WHERE id_config = 1";
+        $result = $this->select($sql);
+        $exists = $result->fetch(PDO::FETCH_ASSOC);
+        return $exists['code'];
     } // isGoodCode
+
+    public function setCodeMaster($code) {  // master
+        $sql = "UPDATE config SET code = :code WHERE id_config = 1";
+        $result = $this->update($sql, ['code' => $code]);
+        return $result;
+    } // setCodeMaster
 
     public function set_t0($t0) {  // master
         $sql = "UPDATE race SET t0 = :t0";
@@ -145,15 +151,14 @@ class CBdd {
 
     public function getParamsCourse() {
         $stmt = $this->select("SELECT * from config LIMIT 1");
-
         return $stmt;
-    }
+    } // getParamsCourse
 
     public function getParamsJuge($num) {  // JUGE
         $sql = "SELECT * from race WHERE num = :num";
         $stmt = $this->select($sql, ['num' => $num]);
         return $stmt;
-    }
+    } // getParamsJuge
 
     public function lockTable($table, $mode) {
         try {
@@ -161,7 +166,7 @@ class CBdd {
             $this->pdo->exec("LOCK TABLES $table $mode");
         } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
-        }
+        } // catch
 
     } // lockTable
 
@@ -232,5 +237,4 @@ class CBdd {
 
 // Création d'une instance de la classe Database
 $db = new CBdd($host, $bddname, $username, $password);
-
 ?>

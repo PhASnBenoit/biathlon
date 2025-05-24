@@ -1,5 +1,7 @@
 <?php
-// juge.php
+// juge2.php
+
+session_start();
 require "../cbdd.php";
 require '../cpage.php';
 $titre = 'BIATHLON PARAMETRES JUGE';
@@ -17,7 +19,6 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
     } // if token diff
 //echo "token ok<br>";
 
-    session_start();
     // lecture état éventuellement modifié par le master
     $state = $db->getState();
 //echo "state = ".$_SESSION['state']."<br>";

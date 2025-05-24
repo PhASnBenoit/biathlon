@@ -9,6 +9,7 @@ etat(bdd)       cookie du term      cookie master bd        conn/reconn     info
 
 TODO A la mise en route, mettre un script qui place state à -1 dans la BDD
 */
+session_start();
 require '../cbdd.php';
 require '../cpage.php';
 $titre = 'BIATHLON AUTHENTIFICATION MASTER v1.85 by PhA (2025)';
@@ -20,9 +21,7 @@ $state = $db->getState();
 if (!empty($_COOKIE['biathlon_master_token'])) {
     $token = $_COOKIE['biathlon_master_token'];
     $tokenBdd = $db->getTokenmaster();
-echo $state."------".$token."------".$tokenBdd.'<br>';
     if ($token === $tokenBdd) {
-        session_start();
         $_SESSION['state'] = $state;
         switch ($_SESSION['state']) {
             case 0: // mot de passe entrée
@@ -40,7 +39,6 @@ echo $state."------".$token."------".$tokenBdd.'<br>';
     } // if token
 } // if cookie
 
-
 if ($state != -1) {
     echo "Un juge est déjà connecté !<br>";
     exit();
@@ -49,32 +47,35 @@ if ($state != -1) {
 // Cas où le master entre un code
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
     $code = $_POST['code'];
-    if ($db->isGoodCode($code)) {
-        session_start();
-        $_SESSION = array();  // détruit le tableau session
+    $hashedBdd = $db->getCodeMaster();
+    if (password_verify($code, $hashedBdd)) {
+        // Supprime le cookie en le réécrivant avec une date expirée
+        setcookie('biathlon_master_token', '', time() - 3600, '/');
+        setcookie('biathlon_juge_token', '', time() - 3600, '/');
+        session_unset();       // efface toutes les variables
+        session_destroy();     // détruit la session côté serveur
+        session_start();       // redémarre une nouvelle session propre
         $_SESSION['id'] = $code;
         $_SESSION['state'] = 0;
         $db->setState(0);
         $db->setNbJuges(0);
         $db->viderTableRace();
-
-        // effacer les cookies de tous les profils
-        foreach ($_COOKIE as $name => $value) {
-            // Supprime le cookie en le réécrivant avec une date expirée
-            setcookie($name, '', time() - 3600, '/');
-        } // for
         // Création et stockage du token
         $token = bin2hex(random_bytes(16));
         setcookie('biathlon_master_token', $token, time() + 3600, "/");
         $db->setTokenmaster($token);
         $_SESSION['tokenmaster'] = $token;
-        header("Location: master1.php");
-        exit();
+        header("Location:master1.php");
     } else {
         echo "<br>master : Code invalide.";
         exit();
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purger'])) {
+    require '../ccsv.php';
+    $csv->purgerCsv();
+} // if
 
 $page->entete($titre);
 $page->finHeadBody();

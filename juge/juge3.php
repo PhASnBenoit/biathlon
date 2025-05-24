@@ -1,5 +1,6 @@
 <?php
 // juge3.php
+
 session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
 require '../cpage.php';

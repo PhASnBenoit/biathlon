@@ -1,6 +1,8 @@
 <?php
 // master1.php
 session_start(); // Toujours ouvrir la session en début de script
+print_r($_SESSION);
+
 require '../cbdd.php';
 require '../cpage.php';
 $titre = 'BIATHLON PARAMETRES MASTER';
@@ -39,11 +41,6 @@ if (isset($_SESSION['state'])) {
         // 0 et 1 : On reste sur la page
     } // sw
 } // if session
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purger'])) {
-    require '../ccsv.php';
-    $csv->purgerCsv();
-} // if 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
     $_SESSION['raceName'] = $_POST['raceName'];
@@ -107,8 +104,9 @@ $page->entete($titre);
         <input type="number" name="dist2T" id="dist2T" min="100" max="999" value="<?php echo $row['dist2T'];?>" required><br>
         <label for="distPen">Distance du tour de pénalité en m (TP) :</label>
         <input type="number" name="distPen" id="distPen" min="50" max="300" value="<?php echo $row['distPen'];?>" required><br>
+        <a href="chpwd.php">Changer mot de passe</a>&nbsp;&nbsp;&nbsp;
         <button type="submit" id="bt-sauver" value="bt-sauver">Sauver et attendre les juges</button>
-        <a href="raz.php">RAZ</a>
+        &nbsp;&nbsp;&nbsp;<a href="raz.php">RAZ</a>
     </form>
 
     <div id="status">Définissez les paramètres...</div>
