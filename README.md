@@ -15,3 +15,6 @@ Sauvegarde des vitesses et delta T dans le fichier csv
 
 v1.9  @PhA - 24/05/25
 Modifier le code master.
+
+v2.0  @PhA - 25/05/25
+Réinitialisation de la course si impossible de se connecter en tant que master.

@@ -41,6 +41,14 @@ if (!empty($_COOKIE['biathlon_master_token'])) {
 
 if ($state != -1) {
     echo "Un juge est déjà connecté !<br>";
+    echo "Si ce n'est pas le cas, vous pouvez réinitialiser la course.<br>";
+    echo "Pour réinitialiser la course :<br>";
+    // TODO Proposer un bouton qui après authentification raz la course
+    echo "<form id='fraz' action='secours.php' method='POST'>";
+    echo "<label for='codeInput'>Entrez un code à 6 chiffres :</label>";
+    echo "<input type='password' name='codeRaz' id='codeRaz' maxlength='6' required>";
+    echo "<button type='submit'>RAZ</button>";
+    echo "</form>";
     exit();
 } // if state
 
