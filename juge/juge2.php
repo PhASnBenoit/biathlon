@@ -7,6 +7,12 @@ require '../cpage.php';
 $titre = 'BIATHLON PARAMETRES JUGE';
 $foot = 'Biathlon Supervision System';
 
+$state = $db->getState();
+if ($state < 1) {
+    header("Location: /juge/");
+    exit();
+} // if state
+
 if (isset($_COOKIE['biathlon_juge_token'])) {
 //echo "Cookie présent<br>";
     $cookieToken = $_COOKIE['biathlon_juge_token'];
@@ -16,6 +22,7 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
         // Suppression du cookie existant
         setcookie('biathlon_juge_token', '', time() - 3600, '/');
         header("location: /juge/");
+        exit();
     } // if token diff
 //echo "token ok<br>";
 
@@ -23,13 +30,8 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
     $state = $db->getState();
 //echo "state = ".$_SESSION['state']."<br>";
     $_SESSION['state'] = $state;
-
     // donner la page correspondante
-    switch ($_SESSION['state']) {
-        case 0:
-            header("location: /juge/");
-            exit();
-        case 3:
+    if ($state == 3) {
             header('Location: juge3.php');
             exit();
         // 1 ou 2 on reste sur la page
@@ -40,6 +42,7 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row['nb_juges'] === $row['max_juges']) {
         header("location: /public/");
+        exit();
     } // if juge
 } // else
 

@@ -7,6 +7,12 @@ require '../cpage.php';
 $titre = 'BIATHLON SUIVI COURSE JUGE';
 $foot = 'Biathlon Supervision System';
 
+$state = $db->getState();
+if ($state < 2) {
+    header("Location: /juge/");
+    exit();
+} // if state
+
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_juge_token'])) {
   echo "Cookie absent !";
@@ -78,7 +84,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
       document.getElementById('table-body').innerHTML = html;
     } // async
     loadData(); // Chargement initial
-    setInterval(loadData, 2000); // Rafraîchissement toutes les 2 secondes
+    setInterval(loadData, 1000); // Rafraîchissement toutes les 2 secondes
   </script>
 
 <?php $page->footer($foot);?>

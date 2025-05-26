@@ -7,7 +7,7 @@ $titre = 'BIATHLON LANCEMENT COURSE MASTER';
 $foot = 'Biathlon Supervision System';
 
 $state = $db->getState();
-if ($state == -1) {
+if ($state < 2) {
     header("Location: /master/");
     exit();
 } // if state
@@ -15,31 +15,24 @@ if ($state == -1) {
 // Sécurité : vérifier l'authentification par cookie
 if (!isset($_COOKIE['biathlon_master_token'])) {
     echo "pas de cookie !";
-    exit();
     header("Location: /master/");
+    exit();
 } // if cookie
 
 $cookieToken = $_COOKIE['biathlon_master_token'];
 $tokenBdd = $db->getTokenmaster();
 if ($cookieToken !== $tokenBdd) {
     echo "mauvais token !";
-    exit();
     header("Location: /master/");
+    exit();
 } // if token
 
 // Si la session existe, décider où aller
-if (isset($_SESSION['state'])) {
-    switch ($_SESSION['state']) {
-        case 0:
-        case 1:
-            header("Location: /master/");
-            exit();
-        case 3:
-            header("Location: master3.php");
-            exit();
-        // 2 : On reste sur la page
-    } // sw
-} // isset
+if ($state == 3) {
+    header("Location: master3.php");
+    exit();
+ // 2 : On reste sur la page
+} // state
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-go'])) {
     $t0 = hrtime(true);

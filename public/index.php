@@ -18,7 +18,7 @@ $page->tablePublic();
       document.getElementById('table-body').innerHTML = html;
     } // async
     loadData(); // Chargement initial
-    setInterval(loadData, 2000); // Rafraîchissement toutes les 5 secondes
+    setInterval(loadData, 1000); // Rafraîchissement toutes les 5 secondes
   </script>
 
 <?php $page->footer($foot);?>

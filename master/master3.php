@@ -4,7 +4,7 @@ session_start(); // Toujours ouvrir la session en début de script
 require '../cbdd.php';
 
 $state = $db->getState();
-if ($state == -1) {
+if ($state < 3) {
     header("Location: /master/");
     exit();
 } // if state
@@ -36,20 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-fin'])) {
     $_SESSION = array();
     header("Location: raz.php");
 } // if post go
-
-// Si la session existe, décider où aller
-if (isset($_SESSION['state'])) {
-    switch ($_SESSION['state']) {
-        case 0:
-        case 1:
-            header("Location: /master/");
-            exit();
-        case 2:
-            header("Location: master2.php");
-            exit();
-        // 3 : On reste sur la page
-    } // sw
-} // isset
 
 //
 // affichage maintenant du déroulement de la course avec gestion du bouton STOP COURSE
@@ -89,7 +75,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
       document.getElementById('table-body').innerHTML = html;
     } // async
     loadData(); // Chargement initial
-    setInterval(loadData, 3000); // Rafraîchissement toutes les 5 secondes
+    setInterval(loadData, 1000); // Rafraîchissement toutes les 5 secondes
   </script>
 
 <?php $page->footer($foot); ?>

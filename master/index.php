@@ -12,7 +12,7 @@ TODO A la mise en route, mettre un script qui place state à -1 dans la BDD
 session_start();
 require '../cbdd.php';
 require '../cpage.php';
-$titre = 'BIATHLON AUTHENTIFICATION MASTER v1.85 by PhA (2025)';
+$titre = 'BIATHLON AUTHENTIFICATION MASTER v2.0 by PhA (2025)';
 $foot = 'Biathlon Supervision System';
 
 $state = $db->getState();
@@ -43,7 +43,7 @@ if ($state != -1) {
     echo "Un juge est déjà connecté !<br>";
     echo "Si ce n'est pas le cas, vous pouvez réinitialiser la course.<br>";
     echo "Pour réinitialiser la course :<br>";
-    // TODO Proposer un bouton qui après authentification raz la course
+    // Bouton qui après authentification raz la course
     echo "<form id='fraz' action='secours.php' method='POST'>";
     echo "<label for='codeInput'>Entrez un code à 6 chiffres :</label>";
     echo "<input type='password' name='codeRaz' id='codeRaz' maxlength='6' required>";
