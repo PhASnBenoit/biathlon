@@ -36,3 +36,6 @@ Réinitialisation de la course si impossible de se connecter en tant que master.
 
 v2.1  @PhA - 26/05/25
 Corrections mineures pour la sécurité des pages master et juges.
+
+v2.2  @PhA - 27/05/25
+Meilleure gestion du cookie juge.

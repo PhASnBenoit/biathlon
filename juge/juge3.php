@@ -69,9 +69,13 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
         <button type="submit" name="bt-temps" id="bt-temps" value="bt-temps" >TEMPS</button>
     </form>
 <?php
-    if ($_SESSION['fini'] == 1)
+    if ($_SESSION['fini'] == 1) {
       echo '<div id="status">Course terminée !</div>';
-    else
+      // suppression de la session et du cookie
+      setcookie('biathlon_juge_token', '', time() - 3600, '/');
+      session_unset();       // efface toutes les variables
+      session_destroy();     // détruit la session côté serveur
+    } else
       echo '<div id="status">Course en cours !</div>';
 ?>
 
