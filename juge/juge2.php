@@ -67,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['judgeName'])) {
             // créer le cookie
             $token = bin2hex(random_bytes(16));
             setcookie('biathlon_juge_token', $token, time() + 3600, "/"); //
-            session_start();
             $_SESSION = array();
             $_SESSION['state'] = $db->getState();
             $_SESSION['no'] = $noJudge;
