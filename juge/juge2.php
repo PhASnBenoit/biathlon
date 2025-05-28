@@ -26,9 +26,6 @@ if (isset($_COOKIE['biathlon_juge_token'])) {
     } // if token diff
 //echo "token ok<br>";
 
-    // lecture état éventuellement modifié par le master
-    $state = $db->getState();
-//echo "state = ".$_SESSION['state']."<br>";
     $_SESSION['state'] = $state;
     // donner la page correspondante
     if ($state == 3) {

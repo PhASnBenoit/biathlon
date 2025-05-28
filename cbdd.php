@@ -162,7 +162,6 @@ class CBdd {
 
     public function lockTable($table, $mode) {
         try {
-            $this->pdo->beginTransaction();
             $this->pdo->exec("LOCK TABLES $table $mode");
         } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
@@ -174,8 +173,6 @@ class CBdd {
         try {
             // Déverrouillage des tables
             $this->pdo->exec("UNLOCK TABLES");
-            // Fin de la transaction
-            $this->pdo->commit();
         } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
         }
