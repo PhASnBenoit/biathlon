@@ -57,6 +57,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
         <div id="params">
             Nom de la course : <?php echo $row['nom_course']; ?><br>
             Nombre de coureurs/juges : <?php echo $row['max_juges']; ?><br>
+<?php echo "Vous êtes le juge numéro ".$_SESSION['no']." nommé ".$_SESSION['judgeName']."<br>";?>
             -----<br>
 <?php
         $stmt = $db->getRace();
