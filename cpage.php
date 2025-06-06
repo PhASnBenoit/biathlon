@@ -47,7 +47,7 @@ EOT;
       <tr>
         <th>Num</th>
         <th>Coureur</th>
-        <th>2T1</th>
+        <th>1T1</th>
         <th>ST1</th>
         <th>TP1</th>
         <th>2T2</th>
@@ -56,6 +56,7 @@ EOT;
         <th>2T3</th>
         <th>ST3</th>
         <th>TP3</th>
+        <th>1T2</th>
         <th>Total</th>
       </tr>
     </thead>

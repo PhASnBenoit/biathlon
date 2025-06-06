@@ -1,7 +1,6 @@
 <?php
 // CCsv.php
 class CCsv {
-
     public function calculerVitesse($dist, $tempsDeb, $tempsFin) {
         // temps reçus en nanoseconds
         // dist en m
@@ -45,31 +44,33 @@ class CCsv {
         // Écriture de la ligne d'en-tête des colonnes de données
         fputcsv($fichier, [
             "Position", "Coureur", "Juge",
-            "2T1", "ST1", "Tirs 1", "TP1",
+            "1T1", "ST1", "Tirs 1", "TP1",
             "2T2", "ST2", "Tirs 2", "TP2",
             "2T3", "ST3", "Tirs 3", "TP3",
-            "Temps total"
+            "1T2", "Temps total"
         ],';');
 
         // Écriture des données pour chaque coureur
         global $db;
         $result = $db->getParamsCourse();
         $row = $result->fetch(PDO::FETCH_ASSOC);
+        $dist1T = $row['dist1T'];
         $dist2T = $row['dist2T'];
         $distPen = $row['distPen'];
+        $distSansPen = $row['distSansPen'];
         foreach ($race as $coureur) {
             fputcsv($fichier, [
                 $coureur['num'], $coureur['runnerName'], $coureur['judgeName'],
                 $this->format_duree($coureur['t1'])." (".number_format($this->calculerVitesse($dist2T,0,$coureur['t1']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t1'])) . ")",
                 $this->format_duree($coureur['t2']), $coureur['seqTirs1'],
-                $this->format_duree($coureur['t3'])." (".number_format($this->calculerVitesse($distPen,$coureur['t2'],$coureur['t3']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t3']-$coureur['t2'])) . ")",
+                $this->format_duree($coureur['t3'])." (".number_format($this->calculerVitesse($distSansPen*(5-(int)$coureur["seqTirs1"][0])+$distSansPen,$coureur['t2'],$coureur['t3']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t3']-$coureur['t2'])) . ")",
                 $this->format_duree($coureur['t4'])." (".number_format($this->calculerVitesse($dist2T,$coureur['t3'],$coureur['t4']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t4']-$coureur['t3'])) . ")",
                 $this->format_duree($coureur['t5']), $coureur['seqTirs2'],
-                $this->format_duree($coureur['t6'])." (".number_format($this->calculerVitesse($distPen,$coureur['t5'],$coureur['t6']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t6']-$coureur['t5'])) . ")",
-
+                $this->format_duree($coureur['t6'])." (".number_format($this->calculerVitesse($distSansPen*(5-(int)$coureur["seqTirs2"][0])+$distSansPen,$coureur['t5'],$coureur['t6']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t6']-$coureur['t5'])) . ")",
                 $this->format_duree($coureur['t7'])." (".number_format($this->calculerVitesse($dist2T,$coureur['t6'],$coureur['t7']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t7']-$coureur['t6'])) . ")",
                 $this->format_duree($coureur['t8']), $coureur['seqTirs3'],
-                $this->format_duree($coureur['t9'])." (".number_format($this->calculerVitesse($distPen,$coureur['t8'],$coureur['t9']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t9']-$coureur['t8'])) . ")",
+                $this->format_duree($coureur['t9'])." (".number_format($this->calculerVitesse($distSansPen*(5-(int)$coureur["seqTirs3"][0])+$distSansPen,$coureur['t8'],$coureur['t9']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t9']-$coureur['t8'])) . ")",
+                $this->format_duree($coureur['t10'])." (".number_format($this->calculerVitesse($distPen,$coureur['t9'],$coureur['t10']), 2, ',', ' ')." km/h) (Δt=" . htmlspecialchars($this->format_duree($coureur['t10']-$coureur['t9'])) . ")",
 
                 $this->format_duree($coureur['totalTime'])
             ],';');

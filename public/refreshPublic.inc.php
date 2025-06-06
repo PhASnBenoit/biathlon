@@ -21,36 +21,39 @@ if ($etat == 3) {
             $val = $csv->format_duree($row["t$i"]);
             //$dval = format_duree($mem);  // delta t
             $note = null;
-
-            // Ajouter les tirs réussis si on est sur t2, t5 ou t8
             unset($seq);
-            if (in_array($i, [2, 5, 8])) {
+            if (in_array($i, [2, 5, 8])) { // Ajouter les tirs réussis si on est sur t2, t5 ou t8
                 $j++;
                 $seqTirs = "seqTirs{$j}";
-                $seq = isset($row[$seqTirs]) ? $row[$seqTirs] : null;
+                $seq = $row[$seqTirs];
+                $nbTirs = (int)$seq[0];
                 echo "<td>".htmlspecialchars($val);
             } // if
-            if (in_array($i, [1, 4, 7])) {
+            if (in_array($i, [1, 10])) {
+                    $dist = $conf['dist1T'];
+                    echo "<td>".htmlspecialchars($val)."<br><span class='sub-value'>(".number_format($csv->calculerVitesse($dist,$mem,$row["t$i"]), 2, ',', ' ')." km/h)</span>";
+            } // if
+            if (in_array($i, [4, 7])) {
                     $dist = $conf['dist2T'];
                     echo "<td>".htmlspecialchars($val)."<br><span class='sub-value'>(".number_format($csv->calculerVitesse($dist,$mem,$row["t$i"]), 2, ',', ' ')." km/h)</span>";
             } // if
-            if (in_array($i, [3, 6, 9])) {
-                    $dist = $conf['distPen'];
+            if (in_array($i, [3, 6, 9])) { // vitesse de la zone pénalité
+                    $dist = $conf['distPen']*(5-$nbTirs)+$conf['distSansPen'];
                     echo "<td>".htmlspecialchars($val)."<br><span class='sub-value'>(".number_format($csv->calculerVitesse($dist,$mem,$row["t$i"]), 2, ',', ' ')." km/h)</span>";
             } // if
             $deltaT = $row["t$i"]-$mem;
             echo "<br><span class='sub-value'>(&Delta;t=" . htmlspecialchars($csv->format_duree($deltaT)) . ")</span>";
             $mem = $row["t$i"];
-            if (isset($seq)) {
+            if (isset($seq)) { // affichage nb tirs
                 echo "<br><span class='sub-value'>" . htmlspecialchars($seq) . "</span>";
             }
             echo "</td>";
         } // for
-        if ($i == 10)
+        if ($i == 11)
             echo "<td  class='bold'>".htmlspecialchars($csv->format_duree($row['totalTime']))."</td>";
         echo "</tr>";
     } // foreach
 } else {
-    echo "<td class='bold' colspan='12'>Pas de course en cours !</td>";
+    echo "<td class='bold' colspan='13'>Pas de course en cours !</td>";
 }// else etat
 ?>

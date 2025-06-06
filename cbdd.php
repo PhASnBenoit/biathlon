@@ -41,9 +41,9 @@ class CBdd {
         return $result;
     } // set_judgeState
 
-    public function saveParamsRace($raceName, $judgeCount, $dist2T, $distPen) {  // master
-        $sql="UPDATE config SET nom_course=:raceName, max_juges=:judgeCount, dist2T=:dist2T, distPen=:distPen WHERE id_config=1";
-        $result = $this->update($sql,['raceName'=>$raceName, 'judgeCount'=>$judgeCount, 'dist2T'=>$dist2T, 'distPen'=>$distPen]);
+    public function saveParamsRace($raceName, $judgeCount, $dist2T, $distPen, $dist1T, $distSansPen) {  // master
+        $sql="UPDATE config SET nom_course=:raceName, max_juges=:judgeCount, dist2T=:dist2T, distPen=:distPen, distSansPen=:distSansPen, dist1T=:dist1T WHERE id_config=1";
+        $result = $this->update($sql,['raceName'=>$raceName, 'judgeCount'=>$judgeCount, 'dist2T'=>$dist2T, 'distPen'=>$distPen, 'dist1T'=>$dist1T, 'distSansPen'=>$distSansPen]);
         return $result;
     } // saveParamsRace
 

@@ -47,7 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['raceName'])) {
     $_SESSION['judgeCount'] = $_POST['judgeCount'];
     $_SESSION['dist2T'] = $_POST['dist2T'];
     $_SESSION['distPen'] = $_POST['distPen'];
-    $res = $db->saveParamsRace($_SESSION['raceName'], $_SESSION['judgeCount'], $_SESSION['dist2T'], $_SESSION['distPen']);
+    $_SESSION['distSansPen'] = $_POST['distSansPen'];
+    $_SESSION['dist1T'] = $_POST['dist1T'];
+    $res = $db->saveParamsRace($_SESSION['raceName'], $_SESSION['judgeCount'], $_SESSION['dist2T'], $_SESSION['distPen'],$_SESSION['dist1T'], $_SESSION['distSansPen']);
     $db->setState(1);
     $_SESSION['state'] = 1;
 } // if
@@ -100,11 +102,15 @@ $page->entete($titre);
         <input type="text" name="raceName" id="raceName" required><br>
         <label for="judgeCount">Nombre de juges :</label>
         <input type="number" name="judgeCount" id="judgeCount" min="1" max="8" required><br>
+        <label for="dist1T">Distance d'un tours en m (1T) :</label>
+        <input type="number" name="dist1T" id="dist1T" min="100" max="500" value="<?php echo $row['dist1T'];?>" required><br>
         <label for="dist2T">Distance 2 tours en m (2T) :</label>
-        <input type="number" name="dist2T" id="dist2T" min="100" max="999" value="<?php echo $row['dist2T'];?>" required><br>
+        <input type="number" name="dist2T" id="dist2T" min="200" max="999" value="<?php echo $row['dist2T'];?>" required><br>
+        <label for="distSansPen">Distance SANS pénalité en m (TP) :</label>
+        <input type="number" name="distSansPen" id="distSansPen" min="1" max="100" value="<?php echo $row['distSansPen'];?>" required><br>
         <label for="distPen">Distance du tour de pénalité en m (TP) :</label>
-        <input type="number" name="distPen" id="distPen" min="50" max="300" value="<?php echo $row['distPen'];?>" required><br>
-        <a href="chpwd.php">Changer mot de passe</a>&nbsp;&nbsp;&nbsp;
+        <input type="number" name="distPen" id="distPen" min="30" max="200" value="<?php echo $row['distPen'];?>" required><br>
+        <a href="chpwd.php">Changer le code</a>&nbsp;&nbsp;&nbsp;
         <button type="submit" id="bt-sauver" value="bt-sauver">Sauver et attendre les juges</button>
         &nbsp;&nbsp;&nbsp;<a href="raz.php">RAZ</a>
     </form>

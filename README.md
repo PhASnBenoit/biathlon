@@ -42,3 +42,7 @@ Meilleure gestion du cookie et de la session d'un juge.
 
 v2.3  @PhA - 28/05/25
 Identification du juge connecté
+
+v3.0 @PhA -
+Ajout des distances 1T, sans Pénalité pour les params du master, changement dans la séquence de la course. Recalcul des vitesses
+

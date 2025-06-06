@@ -31,11 +31,11 @@ if ($token != $data['token']) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bt-temps'])) {
     $t = hrtime(true);
     $judgeState = $db->get_judgeState($_SESSION['no']);  // on récupère le numéro de séquence course.
-    if ($judgeState < 9) {
+    if ($judgeState < 10) {
       $t0 = $db->get_t0();
       $db->setTime($_SESSION['no'], $judgeState+1, $t-$t0);
     }
-    if ($judgeState == 8)
+    if ($judgeState == 9)
       $_SESSION["fini"] = 1; // if
 } // if post go
 
