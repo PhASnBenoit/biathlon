@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 14, 2025 at 06:10 AM
--- Server version: 10.11.9-MariaDB
+-- Generation Time: Jun 06, 2025 at 07:15 PM
+-- Server version: 10.11.11-MariaDB
 -- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -37,7 +37,7 @@ CREATE TABLE `activity` (
 --
 
 INSERT INTO `activity` (`id_activity`, `state`) VALUES
-(1, 0);
+(1, -1);
 
 -- --------------------------------------------------------
 
@@ -47,19 +47,23 @@ INSERT INTO `activity` (`id_activity`, `state`) VALUES
 
 CREATE TABLE `config` (
   `id_config` int(11) NOT NULL,
-  `code` int(11) NOT NULL,
+  `code` varchar(255) NOT NULL,
   `token` varchar(32) NOT NULL,
   `nom_course` varchar(50) NOT NULL,
-  `nb_juges` int(11) NOT NULL DEFAULT 0,
-  `max_juges` int(11) NOT NULL
+  `nb_juges` int(11) NOT NULL DEFAULT 1,
+  `max_juges` int(11) NOT NULL DEFAULT 16,
+  `dist2T` int(11) NOT NULL DEFAULT 600,
+  `distPen` int(11) NOT NULL DEFAULT 100,
+  `distSansPen` int(11) NOT NULL DEFAULT 20,
+  `dist1T` int(11) NOT NULL DEFAULT 325
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` (`id_config`, `code`, `token`, `nom_course`, `nb_juges`, `max_juges`) VALUES
-(1, 111111, '0', 'Course 1', 0, 1);
+INSERT INTO `config` (`id_config`, `code`, `token`, `nom_course`, `nb_juges`, `max_juges`, `dist2T`, `distPen`, `distSansPen`, `dist1T`) VALUES
+(1, '$2y$10$xC5PSXT0fiiVWgCvmnSLN.289a9vyoiGWHSB/58c62dPn9NnwhrVG', '0', 'Course 1', 1, 1, 650, 80, 20, 325);
 
 -- --------------------------------------------------------
 
@@ -74,20 +78,21 @@ CREATE TABLE `race` (
   `judgeName` varchar(50) NOT NULL,
   `token` varchar(32) NOT NULL,
   `judgeState` int(11) NOT NULL,
-  `t0` double DEFAULT NULL,
-  `t1` double DEFAULT NULL,
-  `t2` double DEFAULT NULL,
-  `t3` double DEFAULT NULL,
-  `t4` double DEFAULT NULL,
-  `t5` double DEFAULT NULL,
-  `t6` double DEFAULT NULL,
-  `t7` double DEFAULT NULL,
-  `t8` double DEFAULT NULL,
-  `t9` double DEFAULT NULL,
+  `t0` double DEFAULT NULL COMMENT 'Temps initial',
+  `t1` double DEFAULT NULL COMMENT '1T',
+  `t2` double DEFAULT NULL COMMENT 'ST1',
+  `t3` double DEFAULT NULL COMMENT 'TP1',
+  `t4` double DEFAULT NULL COMMENT '2T',
+  `t5` double DEFAULT NULL COMMENT 'ST2',
+  `t6` double DEFAULT NULL COMMENT 'TP2',
+  `t7` double DEFAULT NULL COMMENT '2T',
+  `t8` double DEFAULT NULL COMMENT 'ST3',
+  `t9` double DEFAULT NULL COMMENT 'TP3',
+  `t10` double DEFAULT NULL COMMENT '1T',
   `totalTime` double DEFAULT 0,
-  `seqTirs1` varchar(5) DEFAULT '0/0',
-  `seqTirs2` varchar(5) DEFAULT '0/0',
-  `seqTirs3` varchar(5) DEFAULT '0/0'
+  `seqTirs1` varchar(5) DEFAULT '-/5',
+  `seqTirs2` varchar(5) DEFAULT '-/5',
+  `seqTirs3` varchar(5) DEFAULT '-/5'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
